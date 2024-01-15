@@ -8,14 +8,14 @@ export default class Users extends Model {
         autoIncrement: true,
         field: "id",
     })
-    id?: number
+    id!: number
 
     @Column({ type: DataType.STRING(100), field: "email", unique: true })
-    email?: string
+    email!: string
 
     @Column({ type: DataType.STRING(100), field: "password"})
-    password?: string
+    password!: string
 
     @Column({type: DataType.BOOLEAN, field: "confirm"})
-    confirm?: boolean
+    confirm!: boolean
 }
