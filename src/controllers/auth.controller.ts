@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import UserRepository from "../repositories/user.repository"
 import User from "../models/user.model"
+import jwt from "jsonwebtoken"
 
 export default class AuthController {
     async login(req: Request, res: Response){
@@ -8,8 +9,7 @@ export default class AuthController {
         console.log(req.body);
         
         if (!email && !password){
-            res.status(400).send({message:"Email and Password can not be empty"})
-            return;
+            return res.status(400).send({message:"Email and Password can not be empty"})
         }
 
         try {
@@ -17,11 +17,22 @@ export default class AuthController {
             if (!loginUser) {
                 return res.status(401).send({message:"invalid email and/or password"})
             }
+
+            const token = jwt.sign(
+                {id: loginUser.id, email: loginUser.email},
+                '123',
+                {expiresIn: '1h'}
+            );
+            res.status(200).send({ message: "Login successful", user: {
+                id: loginUser.id,
+                email: loginUser.email,
+                confirm: loginUser.confirm
+            }, token})
         } catch (error) {
             return res.status(401).send({message:"invalid email and/or password"})
         }
-        res.status(200).send({ message: "Login successful"})
     }
+    
     async register(req: Request, res: Response){
         const {email, password} = req.body
         if (!email && !password){
