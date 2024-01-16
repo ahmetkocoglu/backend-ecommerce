@@ -6,10 +6,10 @@ class AuthRouters{
     controller = new AuthController()
 
     constructor(){
-        this.intializeRoutes()
+        this.initializeRoutes()
     }
 
-    intializeRoutes() {
+    initializeRoutes() {
         this.router.post('/sign-in', this.controller.login)
         this.router.post('/sign-up', this.controller.register)
     }
