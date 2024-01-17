@@ -10,7 +10,8 @@ class ImagesRouters{
     }
 
     initializeRouters() {
-        this.router.get('/images', this.controller.getImages)
+        this.router.get('/:size/:fileName', this.controller.getImages)
+        this.router.get('/:fileName', this.controller.getImages)
     }
 }
 
