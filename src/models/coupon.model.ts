@@ -2,8 +2,8 @@ import { Table, Column, ForeignKey, DataType} from "sequelize-typescript"
 import BaseModel from "./base.model";
 import Product from "./product.model";
 
-@Table({ tableName: "campaigns" })
-export default class Campaign extends BaseModel {
+@Table({ tableName: "coupons" })
+export default class Coupon extends BaseModel {
     @ForeignKey(() => Product)
     @Column({field: "product_id"})
     productId!: number;
@@ -16,4 +16,7 @@ export default class Campaign extends BaseModel {
 
     @Column({ type: DataType.STRING(20), field: "type"})
     type!: string
+
+    @Column({ type: DataType.DECIMAL(7, 2), field: "price" }) //12345,67
+    price!: number
 }

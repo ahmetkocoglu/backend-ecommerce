@@ -1,27 +1,13 @@
-import { Model, Table, Column, DataType, ForeignKey, CreatedAt, UpdatedAt } from "sequelize-typescript"
+import { Table, Column, DataType, ForeignKey } from "sequelize-typescript"
 import Product from "./product.model"
-import { Sequelize } from "sequelize";
+import BaseModel from "./base.model";
 
 @Table({ tableName: "variations" })
-export default class Variation extends Model {
-    @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true, field: "id" })
-    id!: number
-
+export default class Variation extends BaseModel {
     @Column({ type: DataType.STRING(100), field: "title" }) //12345,67
     title!: string
 
     @ForeignKey(() => Product)
-    @Column
+    @Column({field: "product_id"})
     productId!: number;
-
-    @Column({ type: DataType.BOOLEAN, field: "confirm" })
-    confirm!: true
-
-    @CreatedAt
-    @Column({ type: DataType.DATE, defaultValue: Sequelize.literal('NOW()')})
-    createdAt!: Date;
-
-    @UpdatedAt
-    @Column({ type: DataType.DATE, defaultValue: Sequelize.literal('NOW()')})
-    updatedAt!: Date;
 }

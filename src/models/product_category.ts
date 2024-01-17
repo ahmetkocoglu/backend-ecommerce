@@ -1,27 +1,15 @@
-// import { Sequelize } from "sequelize";
-import { Model, Table, Column, DataType, PrimaryKey, CreatedAt, UpdatedAt, ForeignKey, Sequelize} from "sequelize-typescript"
+import { Table, Column, ForeignKey} from "sequelize-typescript"
 import Product from "./product.model";
 import Category from "./category.model";
+import BaseModel from "./base.model";
 
 @Table({ tableName: "product_category" })
-export default class ProductCategory extends Model {
-    @PrimaryKey
-    @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true, field: "id" })
-    id!: number
-
+export default class ProductCategory extends BaseModel {
     @ForeignKey(() => Product)
-    @Column
+    @Column({field: "product_id"})
     productId!: number;
 
     @ForeignKey(() => Category)
-    @Column
+    @Column({field: "category_id"})
     categoryId!: number;
-
-    @CreatedAt
-    @Column({ type: DataType.DATE, defaultValue: Sequelize.literal('NOW()')})
-    createdAt!: Date;
-
-    @UpdatedAt
-    @Column({ type: DataType.DATE, defaultValue: Sequelize.literal('NOW()')})
-    updatedAt!: Date;
 }

@@ -6,6 +6,11 @@ import Price from "../models/price.model";
 import Variation from "../models/variation.model";
 import Category from "../models/category.model";
 import ProductCategory from "../models/product_category";
+import Campaign from "../models/campaign.model";
+import Comment from "../models/comment.model";
+import Favorite from "../models/favorite.model";
+import Movement from "../models/movement.model";
+import Rating from "../models/rating.model";
 
 class Database {
   public sequelize: Sequelize | undefined;
@@ -27,7 +32,7 @@ class Database {
         acquire: config.pool.acquire,
         idle: config.pool.idle
       },
-      models: [Users, Product, Price, Variation, Category, ProductCategory]
+      models: [Users, Product, Price, Variation, Category, ProductCategory, Campaign, Comment, Favorite, Movement, Rating]
     });
 
     await this.sequelize
