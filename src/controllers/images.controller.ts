@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 
 export default class ImagesController {
     async getImages(req: Request, res: Response) {
-        console.log(req.params.size);
         // res.status(200).send({ message: "Images retrieved", url: req.params });
 
         //------
@@ -25,6 +24,7 @@ export default class ImagesController {
         const file = await resizeImg(fs.readFileSync(`uploads/${req.params.fileName}`), {
             width: parseInt(req.params.size)
         });
+
         res.setHeader('Content-Type', 'image/jpg');
         res.setHeader('Content-Length', ''); // Image size here
         res.setHeader('Access-Control-Allow-Origin', '*')
