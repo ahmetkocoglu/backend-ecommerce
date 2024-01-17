@@ -10,11 +10,13 @@ class FileRouters {
     }
 
     initializeRouters() {
-    
-        const multer = require('multer');
+
+        /*const multer = require('multer');
         const upload = multer({ dest: 'uploads/' })
-        
-        this.router.post('/upload', upload.single('avatar'), this.controller.upload)
+
+        this.router.post('/upload', upload.single('avatar'), this.controller.upload)*/
+
+        this.router.post('/upload', this.controller.upload)
     }
 }
 
