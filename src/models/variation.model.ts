@@ -4,8 +4,11 @@ import BaseModel from "./base.model";
 
 @Table({ tableName: "variations" })
 export default class Variation extends BaseModel {
-    @Column({ type: DataType.STRING(100), field: "title" }) //12345,67
+    @Column({ type: DataType.STRING(100), field: "title" })
     title!: string
+
+    @Column({ type: DataType.STRING(100), field: "seo" })
+    seo!: string
 
     @ForeignKey(() => Product)
     @Column({field: "product_id"})

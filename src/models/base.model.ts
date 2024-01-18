@@ -18,6 +18,6 @@ export default class BaseModel extends Model {
     updatedAt!: Date;
 
     @DeletedAt
-    @Column({ type: DataType.DATE, field: "delete_date", defaultValue: Sequelize.literal('NOW()')})
+    @Column({ type: DataType.DATE, field: "delete_date"})
     deletedAt!: Date;
 }
