@@ -1,17 +1,17 @@
-import User from "../models/user.model"
+import Campaign from "../models/campaign.model"
 
-interface IUserRepository {
-    list(): Promise<Array<User>>;
+interface ICampaignRepository {
+    list(): Promise<Array<Campaign>>;
 }
 
-class UserRepository implements IUserRepository {
-    async list(): Promise<Array<User>>{
+class CampaignRepository implements ICampaignRepository {
+    async list(): Promise<Array<Campaign>>{
         try {
-            return await User.findAll()
+            return await Campaign.findAll()
         } catch (error) {
             throw new Error("Couldn't find")
         }
     }
 }
 
-export default new UserRepository()
+export default new CampaignRepository()
