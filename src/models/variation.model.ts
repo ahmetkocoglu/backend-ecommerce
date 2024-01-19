@@ -10,6 +10,9 @@ export default class Variation extends BaseModel {
     @Column({ type: DataType.STRING(100), field: "seo" })
     seo!: string
 
+    @Column({ type: DataType.STRING(255), field: "description"})
+    description!: string
+
     @ForeignKey(() => Product)
     @Column({field: "product_id"})
     productId!: number;

@@ -34,4 +34,7 @@ export default class Movement extends BaseModel {
 
     @Column({ type: DataType.DECIMAL(7, 2), field: "total" }) // 120
     total!: number
+
+    @Column({ type: DataType.STRING(100), field: "description"})
+    description!: string
 }

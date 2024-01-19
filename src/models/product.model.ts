@@ -15,6 +15,9 @@ export default class Product extends BaseModel {
     @Column({ type: DataType.STRING(20), field: "stock_code"})
     stockCode!: string
 
+    @Column({ type: DataType.STRING(20), field: "barcode"})
+    barcode!: string
+
     @Column({ type: DataType.STRING(30), field: "associative"})
     associative!: string
 
