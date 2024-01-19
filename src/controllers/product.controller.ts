@@ -14,4 +14,28 @@ export default class ProductController {
             return res.status(401).send({ message: "error" })
         }
     }
+
+    async setProduct(req: Request, res: Response) {
+        const {title, 
+            seo, 
+            description,
+            stockCode,
+            barcode,
+            associative,
+            tax} = req.body
+        try {
+            const insert = await ProductRepository.insert(
+                title, 
+                seo, 
+                description,
+                stockCode,
+                barcode,
+                associative,
+                tax)
+
+            res.status(200).send({message: "successful", data: insert})
+        } catch (error) {
+            res.status(500).send({message: "Some error"})
+        }
+    }
 }
