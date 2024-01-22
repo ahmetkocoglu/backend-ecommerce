@@ -20,11 +20,11 @@ export default class Movement extends BaseModel {
     @Column({ type: DataType.DECIMAL(7, 2), field: "price" }) // 100
     price!: number
     
-    @Column({ type: DataType.INTEGER, field: "type" }) // giriş, çıkış, header
-    type!: number
+    @Column({ type: DataType.BOOLEAN, field: "type" }) // giriş, çıkış, header
+    type!: boolean
 
-    @Column({ type: DataType.INTEGER, field: "process_type" }) // fatura, sepet, ödeme, kargo, iade, çöp
-    processType!: number
+    @Column({ type: DataType.STRING(10), field: "process_type" }) // fatura, sepet, ödeme, kargo, iade, çöp
+    processType!: string
 
     @Column({ type: DataType.DECIMAL(7, 2), field: "quantity" }) // 1
     quantity!: number

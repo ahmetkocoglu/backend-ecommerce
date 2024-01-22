@@ -14,6 +14,6 @@ export default class Campaign extends BaseModel {
     @Column({ type: DataType.STRING(255), field: "description"})
     description!: string
 
-    @Column({ type: DataType.STRING(20), field: "type"})
+    @Column({ type: DataType.STRING(20), field: "type"}) // ürün bazlı, sepette indirim,
     type!: string
 }
