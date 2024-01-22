@@ -13,6 +13,7 @@ import priceRouters from "./price.route"
 import productCategoryRouters from "./product_category.route"
 import productRouters from "./product.route"
 import ratingRouters from "./rating.route"
+import userRouters from "./user.route"
 import variationRouters from "./variation.route"
 
 export default class Routes {
@@ -31,6 +32,7 @@ export default class Routes {
         app.use('/api/v1/product-category', productCategoryRouters)
         app.use('/api/v1/product', productRouters)
         app.use('/api/v1/rating', ratingRouters)
+        app.use('/api/v1/user', userRouters)
         app.use('/api/v1/variation', variationRouters)
     }
 }
