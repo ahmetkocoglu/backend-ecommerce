@@ -10,8 +10,8 @@ class ProductCategoryRoutes {
     }
 
     initializeRoutes() {
-        this.router.get('/', this.controller.getCategoryProducts)
-        this.router.get('/', this.controller.getProductCategories)
+        this.router.get('/products', this.controller.getCategoryProducts)
+        this.router.get('/categories', this.controller.getProductCategories)
     }
 }
 

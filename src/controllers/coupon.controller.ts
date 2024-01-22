@@ -11,7 +11,7 @@ export default class CouponController {
 
             res.status(200).send({ message: "", list })
         } catch (error) {
-            return res.status(401).send({ message: "error" })
+            return res.status(401).send({ message: "error", error })
         }
     }
 }

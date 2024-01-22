@@ -11,6 +11,7 @@ import Comment from "../models/comment.model";
 import Favorite from "../models/favorite.model";
 import Movement from "../models/movement.model";
 import Rating from "../models/rating.model";
+import Coupon from "../models/coupon.model";
 
 class Database {
   public sequelize: Sequelize | undefined;
@@ -32,7 +33,7 @@ class Database {
         acquire: config.pool.acquire,
         idle: config.pool.idle
       },
-      models: [Users, Product, Price, Variation, Category, ProductCategory, Campaign, Comment, Favorite, Movement, Rating]
+      models: [Users, Product, Price, Variation, Category, ProductCategory, Campaign, Comment, Favorite, Movement, Rating, Coupon]
     });
 
     await this.sequelize
