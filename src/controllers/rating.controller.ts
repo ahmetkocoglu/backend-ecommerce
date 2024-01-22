@@ -14,4 +14,14 @@ export default class RatingController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async setRatings(req: Request, res: Response) {
+        const {productId, userId, rating} = req.body
+        try {
+            const insert = await RatingRepository.insert(productId, userId, rating)
+
+            res.status(200).send({ message: "", data: insert })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
 }

@@ -11,6 +11,7 @@ class RatingRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getRatings)
+        this.router.post('/', this.controller.setRatings)
     }
 }
 
