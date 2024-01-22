@@ -14,4 +14,14 @@ export default class CampaignController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async setCampaigns(req: Request, res: Response) {
+        const {productId, title, description, type} = req.body
+        try {
+            const insert = await CampaignRepository.insert(productId, title, description, type)
+
+            res.status(200).send({ message: "successful", data: insert })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
 }
