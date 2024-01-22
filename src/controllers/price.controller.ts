@@ -14,4 +14,14 @@ export default class PriceController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async setPrices(req: Request, res: Response) {
+        const {productId, price, discountPrice, discountRate} = req.body
+        try {
+            const insert = await priceRepository.insert(productId, price, discountPrice, discountRate)
+
+            res.status(200).send({ message: "", data: insert })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
 }
