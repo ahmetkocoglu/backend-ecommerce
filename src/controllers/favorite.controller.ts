@@ -14,4 +14,14 @@ export default class FavoriteController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async setFavorites(req: Request, res: Response) {
+        const {productId, userId} = req.body
+        try {
+            const insert = await favoriteRepository.insert(productId, userId)
+
+            res.status(200).send({ message: "", data: insert })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
 }

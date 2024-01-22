@@ -2,12 +2,26 @@ import Favorite from "../models/favorite.model"
 
 interface IFavoriteRepository {
     list(): Promise<Array<Favorite>>;
+    insert(
+        productId: number,
+        userId: number
+    ): Promise<Favorite | null>;
 }
 
 class FavoriteRepository implements IFavoriteRepository {
     async list(): Promise<Array<Favorite>>{
         try {
             return await Favorite.findAll()
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async insert(
+        productId: number,
+        userId: number
+    ): Promise<Favorite | null>{
+        try {
+            return await Favorite.create({productId, userId})
         } catch (error) {
             throw new Error("Couldn't find")
         }

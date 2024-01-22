@@ -11,6 +11,7 @@ class FavoriteRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getFavorites)
+        this.router.post('/', this.controller.setFavorites)
     }
 }
 
