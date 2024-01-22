@@ -11,6 +11,7 @@ class CommentRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getComments)
+        this.router.post('/', this.controller.setComments)
     }
 }
 

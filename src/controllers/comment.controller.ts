@@ -14,4 +14,14 @@ export default class CommentController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async setComments(req: Request, res: Response) {
+        const {productId, userId, comment} = req.body
+        try {
+            const insert = await commentRepository.insert(productId, userId, comment)
+
+            res.status(200).send({ message: "", data: insert })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
 }
