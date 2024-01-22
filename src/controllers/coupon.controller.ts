@@ -14,4 +14,14 @@ export default class CouponController {
             return res.status(401).send({ message: "error", error })
         }
     }
+    async setCoupons(req: Request, res: Response) {
+        const {userId, code, title, description, type, price} = req.body
+        try {
+            const insert = await couponRepository.insert(userId, code, title, description, type, price)
+
+            res.status(200).send({ message: "", data: insert })
+        } catch (error) {
+            return res.status(401).send({ message: "error", error })
+        }
+    }
 }

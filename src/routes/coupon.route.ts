@@ -11,6 +11,7 @@ class CouponRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getCoupons)
+        this.router.post('/', this.controller.setCoupons)
     }
 }
 
