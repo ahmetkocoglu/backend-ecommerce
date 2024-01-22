@@ -11,6 +11,7 @@ class VariationRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getVariations)
+        this.router.post('/', this.controller.setVariations)
     }
 }
 
