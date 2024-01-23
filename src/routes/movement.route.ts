@@ -11,6 +11,7 @@ class MovementRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getMovements)
+        this.router.post('/', this.controller.setMovements)
     }
 }
 

@@ -14,4 +14,13 @@ export default class MovementController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async setMovements(req: Request, res: Response) {
+        const {productId, userId, processType, price, discountPrice, quantity, tax, total, description} = req.body
+        try {
+            const insert = await movementRepository.insert(productId, userId, processType, price, discountPrice, quantity, tax, total, description)
+            res.status(200).send({ message: "",  data: insert})
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
 }
