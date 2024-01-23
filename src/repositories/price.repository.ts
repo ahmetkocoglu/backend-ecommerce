@@ -1,6 +1,7 @@
 import Price from "../models/price.model"
 
 interface IPriceRepository {
+    row(productId: number): Promise<Price | null>;
     list(): Promise<Array<Price>>;
     insert(
         productId: number,
@@ -11,6 +12,13 @@ interface IPriceRepository {
 }
 
 class PriceRepository implements IPriceRepository {
+    async row(productId: number): Promise<Price | null> {
+        try {
+            return await Price.findOne({ where: { id: productId } })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
     async list(): Promise<Array<Price>>{
         try {
             return await Price.findAll()

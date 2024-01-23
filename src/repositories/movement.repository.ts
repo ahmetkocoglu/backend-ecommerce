@@ -1,6 +1,7 @@
 import Movement from "../models/movement.model"
 
 interface IMovementRepository {
+    row( productId: number): Promise<Movement | null>;
     list(): Promise<Array<Movement>>;
     insert(
         productId: number, 
@@ -16,6 +17,11 @@ interface IMovementRepository {
 }
 
 class MovementRepository implements IMovementRepository {
+    async row( productId: number): Promise<Movement | null> {
+        console.log(productId);
+        
+        return await Movement.findOne({where: {productId: productId}})
+    }
     async list(): Promise<Array<Movement>>{
         try {
             return await Movement.findAll()
