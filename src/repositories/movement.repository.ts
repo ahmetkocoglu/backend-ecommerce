@@ -3,6 +3,8 @@ import Movement from "../models/movement.model"
 interface IMovementRepository {
     row(productId: number): Promise<Movement | null>;
     list(userId: number): Promise<Array<Movement>>;
+    basket(userId: number): Promise<Array<Movement>>;
+    payHeader(userId: number): Promise<Number>;
     insert(
         productId: number,
         userId: number,
@@ -25,6 +27,23 @@ class MovementRepository implements IMovementRepository {
     async list(userId: number): Promise<Array<Movement>> {
         try {
             return await Movement.findAll({ where: { userId } })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async basket(userId: number): Promise<Array<Movement>> {
+        try {
+            return await Movement.findAll({ where: { userId, process_type: 'basket' } })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async payHeader(userId: number): Promise<number> {
+        try {
+            const update = await Movement.update({process_type: 'pay'},{ where: { userId: userId, process_type: 'basket' } })
+            console.log(update);
+            
+            return 1
         } catch (error) {
             throw new Error("Couldn't find")
         }
