@@ -14,7 +14,7 @@ interface IPriceRepository {
 class PriceRepository implements IPriceRepository {
     async row(productId: number): Promise<Price | null> {
         try {
-            return await Price.findOne({ where: { id: productId } })
+            return await Price.findOne({ where: { productId } })
         } catch (error) {
             throw new Error("Couldn't find")
         }
