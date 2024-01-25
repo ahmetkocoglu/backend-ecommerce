@@ -21,7 +21,7 @@ export default class AuthController {
             const token = jwt.sign(
                 {id: loginUser.id, email: loginUser.email},
                 '123',
-                {expiresIn: '1h'}
+                {expiresIn: '12h'}
             );
             res.status(200).send({ message: "Login successful", user: {
                 id: loginUser.id,

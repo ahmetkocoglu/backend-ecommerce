@@ -25,9 +25,10 @@ export default class PaymentController {
 
         const total = (basketList.reduce((acc, o) => acc + parseFloat(o.total), 0));
         
-        const pay = await movementRepository.payHeader(userId)
+        const payId = await movementRepository.payHeaderInsert(userId, total)
 
+        await movementRepository.payRowUpdate(userId, payId)
 
-        res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, pay});
+        res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, payId});
     }
 }

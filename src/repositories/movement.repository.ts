@@ -4,7 +4,9 @@ interface IMovementRepository {
     row(productId: number): Promise<Movement | null>;
     list(userId: number): Promise<Array<Movement>>;
     basket(userId: number): Promise<Array<Movement>>;
-    payHeader(userId: number): Promise<Number>;
+    payHeaderInsert(userId: number, total: number): Promise<Number>;
+    payHeaderUpdate(userId: number): Promise<Number>;
+    payRowUpdate(userId: number, payId: number): Promise<Number>;
     insert(
         productId: number,
         userId: number,
@@ -38,11 +40,27 @@ class MovementRepository implements IMovementRepository {
             throw new Error("Couldn't find")
         }
     }
-    async payHeader(userId: number): Promise<number> {
+    async payHeaderInsert(userId: number, total: number): Promise<number> {
+      return Movement.create({
+            userId, processType: "pay", total, description: "Ödeme işlemi yapıldı"
+        }).then((res) => {
+            return res.dataValues.id
+        }).catch(() => {
+            return 0
+        })
+    }
+    async payHeaderUpdate(userId: number): Promise<number> {
         try {
-            const update = await Movement.update({process_type: 'pay'},{ where: { userId: userId, process_type: 'basket' } })
-            console.log(update);
-            
+            const update = await Movement.update({ processType: 'pay' }, { where: { userId: userId, processType: 'basket' } })
+
+            return 1
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async payRowUpdate(userId: number, payId: number): Promise<number> {
+        try {
+            const update = await Movement.update({ movementId: payId, type: false, processType: 'pay' }, { where: { userId: userId, processType: 'basket' } })
             return 1
         } catch (error) {
             throw new Error("Couldn't find")
