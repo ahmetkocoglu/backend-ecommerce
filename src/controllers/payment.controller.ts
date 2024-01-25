@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 import movementRepository from "../repositories/movement.repository";
 
 export default class PaymentController {
-    async pay(req: Request, res: Response){
+    async pay(req: Request, res: Response) {
         const token = req.headers.authorization?.replace('Bearer ', '') as string
         let userId;
 
@@ -19,16 +19,21 @@ export default class PaymentController {
 
         const list = await movementRepository.basket(userId)
 
-        const basketList = list.map((k: any) => {
-            return {total: k.total, productId: k.productId}
-        })
+        if (list.length > 0) {
+            const basketList = list.map((k: any) => {
+                return { total: k.total, tax: k.tax, productId: k.productId }
+            })
 
-        const total = (basketList.reduce((acc, o) => acc + parseFloat(o.total), 0));
-        
-        const payId = await movementRepository.payHeaderInsert(userId, total)
+            const total = (basketList.reduce((acc, o) => acc + parseFloat(o.total), 0));
+            const totalTax = (basketList.reduce((acc, o) => acc + parseFloat(o.tax), 0));
 
-        await movementRepository.payRowUpdate(userId, payId)
+            const payId = await movementRepository.payHeaderInsert(userId, total, totalTax)
 
-        res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, payId});
+            await movementRepository.payRowUpdate(userId, payId)
+
+            res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, payId });
+        } else {
+            res.status(200).send({ message: "no basket" })
+        }
     }
 }

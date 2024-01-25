@@ -63,9 +63,10 @@ export default class MovementController {
 
         const price = priceRow?.price ?? 0
         const discountPrice = priceRow?.discountPrice ?? 0
-        const tax = (discountPrice / 100) * (productRow?.tax ?? 0)
+        const taxRate = productRow?.tax ?? 0
+        const tax = discountPrice - (discountPrice / (1 + (taxRate / 100))) // kdv dahil vergi miktarı
         const totalTax = tax * quantity
-        const total = (discountPrice * quantity) + totalTax
+        const total = discountPrice * quantity
 
         const insert = await movementRepository.insert(
             productId,

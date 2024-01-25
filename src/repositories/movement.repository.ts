@@ -4,8 +4,7 @@ interface IMovementRepository {
     row(productId: number): Promise<Movement | null>;
     list(userId: number): Promise<Array<Movement>>;
     basket(userId: number): Promise<Array<Movement>>;
-    payHeaderInsert(userId: number, total: number): Promise<Number>;
-    payHeaderUpdate(userId: number): Promise<Number>;
+    payHeaderInsert(userId: number, total: number, tax: number): Promise<Number>;
     payRowUpdate(userId: number, payId: number): Promise<Number>;
     insert(
         productId: number,
@@ -40,31 +39,26 @@ class MovementRepository implements IMovementRepository {
             throw new Error("Couldn't find")
         }
     }
-    async payHeaderInsert(userId: number, total: number): Promise<number> {
+    async payHeaderInsert(userId: number, total: number, tax: number): Promise<number> {
       return Movement.create({
-            userId, processType: "pay", total, description: "Ödeme işlemi yapıldı"
+            userId, processType: "pay", tax, total, description: "Ödeme işlemi yapıldı"
         }).then((res) => {
             return res.dataValues.id
         }).catch(() => {
             return 0
         })
     }
-    async payHeaderUpdate(userId: number): Promise<number> {
-        try {
-            const update = await Movement.update({ processType: 'pay' }, { where: { userId: userId, processType: 'basket' } })
 
-            return 1
-        } catch (error) {
-            throw new Error("Couldn't find")
-        }
-    }
     async payRowUpdate(userId: number, payId: number): Promise<number> {
-        try {
-            const update = await Movement.update({ movementId: payId, type: false, processType: 'pay' }, { where: { userId: userId, processType: 'basket' } })
-            return 1
-        } catch (error) {
-            throw new Error("Couldn't find")
-        }
+        return Movement.update(
+            { movementId: payId, type: false, processType: 'pay' }, 
+            { where: { userId: userId, processType: 'basket' } })
+            .then((res) => {
+                return res[0]
+            })
+            .catch((error) => {
+                return 0
+            })
     }
     async insert(
         productId: number,
