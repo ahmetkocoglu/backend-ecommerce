@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken"
 import movementRepository from "../repositories/movement.repository";
+import axios from "axios";
 
 export default class PaymentController {
     async pay(req: Request, res: Response) {
@@ -35,5 +36,19 @@ export default class PaymentController {
         } else {
             res.status(200).send({ message: "no basket" })
         }
+    }
+    async test(req: Request, res: Response) {
+        await axios.post("http://localhost:3070/payment", {
+            code: "V7N#fU3hT6xXxn9gY6dwq$T5nRaPJ$b0Dl0pBh",
+            price: 100
+        })
+        .then((response: any) => {
+            console.log(response.data);
+          return  res.status(200).send({ message: "başarılı", data: response.data })
+        })
+        .catch((error) => {
+            console.log(error);
+            return  res.status(400).send({ message: "hatalı" })
+        });
     }
 }

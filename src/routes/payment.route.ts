@@ -11,6 +11,7 @@ class PaymentRoutes {
 
     initializeRoutes() {
         this.router.post('/', this.controller.pay)
+        this.router.post('/test', this.controller.test)
     }
 }
 
