@@ -6,7 +6,7 @@ import axios from "axios";
 export default class PaymentController {
     async pay(req: Request, res: Response) {
         const token = req.headers.authorization?.replace('Bearer ', '') as string
-        let userId;
+        let userId: number;
 
         try {
             const verify = jwt.verify(token, "123")
@@ -28,11 +28,54 @@ export default class PaymentController {
             const total = (basketList.reduce((acc, o) => acc + parseFloat(o.total), 0));
             const totalTax = (basketList.reduce((acc, o) => acc + parseFloat(o.tax), 0));
 
-            const payId = await movementRepository.payHeaderInsert(userId, total, totalTax)
+            let provisionCode;
 
-            await movementRepository.payRowUpdate(userId, payId)
+            const cardName = req.body.cardName
+            const cardNumber = req.body.cardNumber.replace(/\s/g, '');
+            const expMonthYear = req.body.expMonthYear
+            const cvCode = req.body.cvCode
+            const installments = req.body.installments
 
-            res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, payId });
+            await axios.post("http://localhost:3070/validation", {
+                cardName: cardName,
+                cardNumber: cardNumber,
+                expMonthYear: expMonthYear,
+                cvCode: cvCode,
+                installments: installments
+            })
+                .then((response: any) => {
+                    if (response.data.status === "1") {
+                        provisionCode = response.data.code
+                    }
+                    console.log(response.data);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
+            if (provisionCode) {
+                await axios.post("http://localhost:3070/payment", {
+                    code: provisionCode,
+                    price: total
+                })
+                    .then(async (response: any) => {
+                        if (response.data.status === true) {
+                        }
+                        const payId = await movementRepository.payHeaderInsert(userId, total, totalTax)
+
+                        await movementRepository.payRowUpdate(userId, payId)
+
+                        return res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, payId });
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        return res.status(400).send({ message: "hatalı" })
+                    });
+            } else {
+                res.status(200).send({ message: "banka ödeme işlemini red etti" })
+            }
+
+            res.status(200).send({ message: "---" })
         } else {
             res.status(200).send({ message: "no basket" })
         }
@@ -42,13 +85,13 @@ export default class PaymentController {
             code: "V7N#fU3hT6xXxn9gY6dwq$T5nRaPJ$b0Dl0pBh",
             price: 100
         })
-        .then((response: any) => {
-            console.log(response.data);
-          return  res.status(200).send({ message: "başarılı", data: response.data })
-        })
-        .catch((error) => {
-            console.log(error);
-            return  res.status(400).send({ message: "hatalı" })
-        });
+            .then((response: any) => {
+                console.log(response.data);
+                return res.status(200).send({ message: "başarılı", data: response.data })
+            })
+            .catch((error) => {
+                console.log(error);
+                return res.status(400).send({ message: "hatalı" })
+            });
     }
 }
