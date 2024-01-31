@@ -11,6 +11,7 @@ class ProductRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getProducts)
+        this.router.get('/:seo', this.controller.getProduct)
         this.router.post('/', this.controller.setProduct)
     }
 }

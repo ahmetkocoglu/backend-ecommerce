@@ -14,6 +14,18 @@ export default class ProductController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async getProduct(req: Request, res: Response) {
+        try {
+            const row = await ProductRepository.product(req.params.seo)
+            if (!row) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ message: "", row })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
 
     async setProduct(req: Request, res: Response) {
         const {title, 

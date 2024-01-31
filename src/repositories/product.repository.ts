@@ -4,6 +4,7 @@ import Product from "../models/product.model"
 interface IProductRepository {
     row(productId: number): Promise<Product | null>;
     list(): Promise<Array<Product>>;
+    product(seo: string): Promise<Product | null>;
     insert(
         title: string,
         seo: string,
@@ -26,6 +27,13 @@ class ProductRepository implements IProductRepository {
     async list(): Promise<Array<Product>> {
         try {
             return await Product.findAll()
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async product(seo: string): Promise<Product | null> {
+        try {
+            return await Product.findOne({where: { seo}})
         } catch (error) {
             throw new Error("Couldn't find")
         }
