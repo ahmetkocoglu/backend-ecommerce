@@ -26,6 +26,18 @@ export default class ProductController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async search(req: Request, res: Response) {
+        try {
+            const rows = await ProductRepository.search(req.params.search)
+            if (rows.length === 0) {
+                return res.status(404).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ message: "", rows })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
 
     async setProduct(req: Request, res: Response) {
         const {title, 
