@@ -15,6 +15,17 @@ export default class ProductController {
         }
     }
     async getProduct(req: Request, res: Response) {
+        const url = require('url');
+        const querystring = require('querystring');
+
+        let rawUrl = 'https://stackabuse.com/?page=2&limit=3';
+
+        let parsedUrl = url.parse(rawUrl);
+        let parsedQs = querystring.parse(parsedUrl.query);
+
+        console.log(parsedQs);
+        
+        
         try {
             const row = await ProductRepository.product(req.params.seo)
             if (!row) {
@@ -22,6 +33,46 @@ export default class ProductController {
             }
 
             res.status(200).send({ message: "", row })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
+    async setProductEnable(req: Request, res: Response) {
+        const id: number = parseInt(req.params.id)
+        try {
+            const row = await ProductRepository.productUpdate(id, { confirm: true })
+            if (!row) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ status: true, message: "", row })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
+    async setProductDisable(req: Request, res: Response) {
+        const id: number = parseInt(req.params.id)
+        try {
+            const row = await ProductRepository.productUpdate(id, { confirm: false })
+            if (!row) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ status: true, message: "", row })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
+    async setProductDelete(req: Request, res: Response) {
+        const id: number = parseInt(req.params.id)
+        const now = new Date(Date.now())
+        try {
+            const row = await ProductRepository.productUpdate(id, { deletedAt: now })
+            if (!row) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ status: true, message: "", row, now })
         } catch (error) {
             return res.status(401).send({ message: "error" })
         }

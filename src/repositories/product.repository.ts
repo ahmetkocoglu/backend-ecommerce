@@ -5,6 +5,9 @@ interface IProductRepository {
     row(productId: number): Promise<Product | null>;
     list(): Promise<Array<Product>>;
     product(seo: string): Promise<Product | null>;
+    productUpdate(id: number, obj: any): Promise<Number | null>;
+    productEnable(id: number): Promise<Number | null>;
+    productDisable(id: number): Promise<Number | null>;
     search(seo: string): Promise<Array<Product>>;
     insert(
         title: string,
@@ -34,7 +37,57 @@ class ProductRepository implements IProductRepository {
     }
     async product(seo: string): Promise<Product | null> {
         try {
-            return await Product.findOne({ where: { seo } })
+            return await Product.findOne({ where: {
+                [Op.or]: [
+                    { seo },
+                    { id: seo }
+                  ]
+            } })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async productUpdate(id: number, obj: any): Promise<Number | null> {
+        try {
+            return Product.update(
+                obj,
+                { where: { id } })
+                .then((res) => {
+                    return res[0]
+                })
+                .catch((error) => {
+                    return 0
+                })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async productEnable(id: number): Promise<Number | null> {
+        try {
+            return Product.update(
+                { confirm: true },
+                { where: { id } })
+                .then((res) => {
+                    return res[0]
+                })
+                .catch((error) => {
+                    return 0
+                })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async productDisable(id: number): Promise<Number | null> {
+        try {
+            return Product.update(
+                { confirm: false },
+                { where: { id } })
+                .then((res) => {
+                    return res[0]
+                })
+                .catch((error) => {
+                    return 0
+                })
         } catch (error) {
             throw new Error("Couldn't find")
         }
