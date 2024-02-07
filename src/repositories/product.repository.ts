@@ -95,7 +95,7 @@ class ProductRepository implements IProductRepository {
             throw new Error("Couldn't find")
         }
     }
-    async search(seo: string): Promise<Array<Product>> {
+    async search(seo: string = ''): Promise<Array<Product>> {
         try {
             return await Product.findAll({
                 where: {

@@ -18,26 +18,27 @@ export default class ProductController {
         const url = require('url');
         const querystring = require('querystring');
 
-        var rawUrl = req.protocol + '://' + req.get('Host') + req.url;
-        let parsedUrl = url.parse(rawUrl);
-        let parsedQs = querystring.parse(parsedUrl.query);
+        const rawUrl = req.protocol + '://' + req.get('Host') + req.url;
+        const parsedUrl = url.parse(rawUrl);
+
+        const parsedQs = querystring.parse(parsedUrl.query);
 
         const id = parsedQs.id === "true";
-        
+
         try {
-            if (id === true){
+            if (id === true) {
                 const row = await ProductRepository.productId(parseInt(req.params.seo))
                 if (!row) {
                     return res.status(401).send({ message: "no valid data found" })
                 }
-    
+
                 res.status(200).send({ message: "", row })
             } else {
                 const row = await ProductRepository.productSeo(req.params.seo)
                 if (!row) {
                     return res.status(401).send({ message: "no valid data found" })
                 }
-    
+
                 res.status(200).send({ message: "", row })
             }
         } catch (error) {
@@ -98,26 +99,62 @@ export default class ProductController {
     }
 
     async setProduct(req: Request, res: Response) {
-        const {title, 
-            seo, 
+        const {
+            title,
+            seo,
             description,
             stockCode,
             barcode,
             associative,
-            tax} = req.body
+            tax
+        } = req.body
         try {
             const insert = await ProductRepository.insert(
-                title, 
-                seo, 
+                title,
+                seo,
                 description,
                 stockCode,
                 barcode,
                 associative,
                 tax)
 
-            res.status(200).send({message: "successful", data: insert})
+            res.status(200).send({ message: "successful", data: insert })
         } catch (error) {
-            res.status(500).send({message: "Some error"})
+            res.status(500).send({ message: "Some error" })
+        }
+    }
+
+    async updateProduct(req: Request, res: Response) {
+        const {
+            id,
+            title,
+            seo,
+            description,
+            stockCode,
+            barcode,
+            associative,
+            tax
+        } = req.body
+        try {
+            if (id) {
+                const row = await ProductRepository.productUpdate(id, {
+                    title,
+                    seo,
+                    description,
+                    stockCode,
+                    barcode,
+                    associative,
+                    tax
+                })
+                if (!row) {
+                    return res.status(401).send({ message: "no valid data found" })
+                }
+                res.status(200).send({ status: true, message: "", row })
+            } else {
+                res.status(401).send({ message: "no valid data found" })
+            }
+        } catch (error) {
+            res.status(500).send({ message: "Some error" })
         }
     }
 }
