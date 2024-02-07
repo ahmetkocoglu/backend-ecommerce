@@ -4,7 +4,8 @@ import { Op } from "sequelize";
 interface IProductRepository {
     row(productId: number): Promise<Product | null>;
     list(): Promise<Array<Product>>;
-    product(seo: string): Promise<Product | null>;
+    productId(id: number): Promise<Product | null>;
+    productSeo(seo: string): Promise<Product | null>;
     productUpdate(id: number, obj: any): Promise<Number | null>;
     productEnable(id: number): Promise<Number | null>;
     productDisable(id: number): Promise<Number | null>;
@@ -35,14 +36,16 @@ class ProductRepository implements IProductRepository {
             throw new Error("Couldn't find")
         }
     }
-    async product(seo: string): Promise<Product | null> {
+    async productId(id: number): Promise<Product | null> {
         try {
-            return await Product.findOne({ where: {
-                [Op.or]: [
-                    { seo },
-                    { id: seo }
-                  ]
-            } })
+            return await Product.findOne({ where: { id } })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async productSeo(seo: string): Promise<Product | null> {
+        try {
+            return await Product.findOne({ where: { seo } })
         } catch (error) {
             throw new Error("Couldn't find")
         }

@@ -18,21 +18,28 @@ export default class ProductController {
         const url = require('url');
         const querystring = require('querystring');
 
-        let rawUrl = 'https://stackabuse.com/?page=2&limit=3';
-
+        var rawUrl = req.protocol + '://' + req.get('Host') + req.url;
         let parsedUrl = url.parse(rawUrl);
         let parsedQs = querystring.parse(parsedUrl.query);
 
-        console.log(parsedQs);
-        
+        const id = parsedQs.id === "true";
         
         try {
-            const row = await ProductRepository.product(req.params.seo)
-            if (!row) {
-                return res.status(401).send({ message: "no valid data found" })
+            if (id === true){
+                const row = await ProductRepository.productId(parseInt(req.params.seo))
+                if (!row) {
+                    return res.status(401).send({ message: "no valid data found" })
+                }
+    
+                res.status(200).send({ message: "", row })
+            } else {
+                const row = await ProductRepository.productSeo(req.params.seo)
+                if (!row) {
+                    return res.status(401).send({ message: "no valid data found" })
+                }
+    
+                res.status(200).send({ message: "", row })
             }
-
-            res.status(200).send({ message: "", row })
         } catch (error) {
             return res.status(401).send({ message: "error" })
         }
