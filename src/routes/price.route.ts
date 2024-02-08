@@ -11,6 +11,7 @@ class PriceRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getPrices)
+        this.router.get('/:id', this.controller.getPrice)
         this.router.post('/', this.controller.setPrices)
     }
 }

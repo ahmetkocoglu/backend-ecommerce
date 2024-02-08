@@ -15,11 +15,29 @@ export default class PriceController {
         }
     }
     async setPrices(req: Request, res: Response) {
-        const {productId, price, discountPrice, discountRate} = req.body
-        try {
-            const insert = await priceRepository.insert(productId, price, discountPrice, discountRate)
+        const { id, productId, price, discountPrice, discountRate } = req.body
+        if (id) {
+            const update = await priceRepository.update(productId, price, discountPrice, discountRate)
 
-            res.status(200).send({ message: "", data: insert })
+            res.status(200).send({ message: "", data: update })
+        } else {
+            try {
+                const insert = await priceRepository.insert(productId, price, discountPrice, discountRate)
+
+                res.status(200).send({ message: "", data: insert })
+            } catch (error) {
+                return res.status(401).send({ message: "error" })
+            }
+        }
+    }
+    async getPrice(req: Request, res: Response) {
+        try {
+            const list = await priceRepository.row(parseInt(req.params.id))
+            if (!list) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ message: "", list })
         } catch (error) {
             return res.status(401).send({ message: "error" })
         }
