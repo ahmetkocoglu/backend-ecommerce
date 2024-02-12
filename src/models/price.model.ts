@@ -1,4 +1,4 @@
-import { Table, Column, DataType, ForeignKey } from "sequelize-typescript"
+import { Table, Column, DataType, ForeignKey, BelongsTo } from "sequelize-typescript"
 import Product from "./product.model"
 import BaseModel from "./base.model";
 
@@ -14,6 +14,9 @@ export default class Price extends BaseModel {
     discountRate!: number
 
     @ForeignKey(() => Product)
-    @Column({field: "product_id"})
-    productId!: number;
+    @Column({type: DataType.INTEGER, field: "product_id"})
+    declare productId: number
+
+    @BelongsTo(() => Product, 'product_id')
+    product: Product | undefined
 }

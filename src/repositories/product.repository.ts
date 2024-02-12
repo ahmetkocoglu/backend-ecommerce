@@ -1,5 +1,7 @@
+import Price from "../models/price.model";
 import Product from "../models/product.model"
 import { Op } from "sequelize";
+import Rating from "../models/rating.model";
 
 interface IProductRepository {
     row(productId: number): Promise<Product | null>;
@@ -31,21 +33,43 @@ class ProductRepository implements IProductRepository {
     }
     async list(): Promise<Array<Product>> {
         try {
-            return await Product.findAll()
+            return await Product.findAll({
+                where: { confirm: true },
+                attributes: { exclude: ['id', 'confirm', 'deletedAt', 'createdAt'] },
+                include: {
+                    model: Price,
+                    attributes: ['price', 'discountPrice', 'discountRate']
+                }
+            })
         } catch (error) {
             throw new Error("Couldn't find")
         }
     }
     async productId(id: number): Promise<Product | null> {
         try {
-            return await Product.findOne({ where: { id } })
+            return await Product.findOne({
+                where: { id },
+                include: {
+                    model: Price,
+                    attributes: ['price', 'discountPrice', 'discountRate']
+                }
+            })
         } catch (error) {
             throw new Error("Couldn't find")
         }
     }
     async productSeo(seo: string): Promise<Product | null> {
         try {
-            return await Product.findOne({ where: { seo } })
+            return await Product.findOne({
+                where: { seo },
+                include: [{
+                    model: Price,
+                    attributes: ['price', 'discountPrice', 'discountRate'],
+                }, {
+                    model: Rating,
+                    attributes: ['rating']
+                }]
+            })
         } catch (error) {
             throw new Error("Couldn't find")
         }

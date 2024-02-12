@@ -3,6 +3,8 @@ import ProductRepository from "../repositories/product.repository";
 
 export default class ProductController {
     async getProducts(req: Request, res: Response) {
+        console.log('getProducts >> ');
+        
         try {
             const list = await ProductRepository.list()
             if (!list) {
@@ -11,7 +13,7 @@ export default class ProductController {
 
             res.status(200).send({ message: "", list })
         } catch (error) {
-            return res.status(401).send({ message: "error" })
+            return res.status(401).send({ message: "error", error })
         }
     }
     async getProduct(req: Request, res: Response) {

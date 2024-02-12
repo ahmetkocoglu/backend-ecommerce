@@ -1,5 +1,7 @@
-import { Table, Column, DataType} from "sequelize-typescript"
+import { Table, Column, DataType, HasOne, HasMany} from "sequelize-typescript"
 import BaseModel from "./base.model";
+import Price from "./price.model";
+import Rating from "./rating.model";
 
 @Table({ tableName: "products" })
 export default class Product extends BaseModel {
@@ -23,4 +25,10 @@ export default class Product extends BaseModel {
 
     @Column({ type: DataType.DECIMAL(4, 2), field: "tax" }) // %15.6
     tax!: number
+
+    @HasOne(() => Price, 'product_id')
+    price: Price | undefined
+
+    @HasMany(() => Rating, 'product_id')
+    rating: Rating | undefined
 }
