@@ -1,12 +1,11 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import UserRepository from "../repositories/user.repository"
-import User from "../models/user.model"
 import jwt from "jsonwebtoken"
 
 export default class AuthController {
     async login(req: Request, res: Response){
         const {email, password} = req.body
-        console.log(req.body);
+        console.log(req.body.name);
         
         if (!email && !password){
             return res.status(400).send({message:"Email and Password can not be empty"})
@@ -19,7 +18,7 @@ export default class AuthController {
             }
 
             const token = jwt.sign(
-                {id: loginUser.id, email: loginUser.email},
+                {id: loginUser.id, email: loginUser.email, confirm: loginUser.confirm},
                 '123',
                 {expiresIn: '12h'}
             );
@@ -47,5 +46,27 @@ export default class AuthController {
         } catch (error) {
             res.status(500).send({message: "Some error"})
         }
+    }
+
+    addBodyUser(req: Request, res: Response, next: NextFunction) {
+        const authorizationHeader = req.header('Authorization');
+        
+        if(!authorizationHeader || !authorizationHeader.startsWith("Bearer ")){
+            return res.status(401).json({success: false, message: "Invalid authorization header"})
+        } else {
+            const token = authorizationHeader.replace("Bearer ", "")
+            const verify = jwt.verify(token, "123")
+            const decode: any = verify ? jwt.decode(token) : null
+
+            if (!decode) return res.status(401).json({success: false, message: "Invalid authorization"})
+
+            const userId = decode.id
+            const userEmail = decode.email
+            const userConfirm = decode.confirm
+
+            req.body.authUser = {userId, userEmail, userConfirm}
+        }
+
+        next()
     }
 }

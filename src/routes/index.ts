@@ -1,4 +1,5 @@
 import { Application } from "express"
+import AuthController from "../controllers/auth.controller"
 import authRouter from "./auth.route"
 import addressRoutes from "./address.route"
 import fileRouters from "./file.route"
@@ -18,8 +19,11 @@ import variationRouters from "./variation.route"
 import paymentRouters from "./payment.route"
 
 export default class Routes {
+    auth = new AuthController()
+
     constructor(app: Application){
         app.use('/api/v1/auth', authRouter)
+        //app.use(this.addBodyUser)
         app.use('/api/v1/address', addressRoutes)
         app.use('/api/v1/file', fileRouters)
         app.use('/api/v1/img', imagesRouters)
@@ -33,8 +37,9 @@ export default class Routes {
         app.use('/api/v1/product-category', productCategoryRouters)
         app.use('/api/v1/product', productRouters)
         app.use('/api/v1/rating', ratingRouters)
-        app.use('/api/v1/user', userRouters)
+        app.use('/api/v1/user', this.auth.addBodyUser, userRouters)
         app.use('/api/v1/variation', variationRouters)
         app.use('/api/v1/payment', paymentRouters)
     }
 }
+

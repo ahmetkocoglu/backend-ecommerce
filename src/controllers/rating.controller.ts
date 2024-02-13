@@ -15,7 +15,8 @@ export default class RatingController {
         }
     }
     async setRatings(req: Request, res: Response) {
-        const {productId, userId, rating} = req.body
+        const {productId, authUser, rating} = req.body
+        const userId = authUser.userId
         try {
             const insert = await RatingRepository.insert(productId, userId, rating)
 
