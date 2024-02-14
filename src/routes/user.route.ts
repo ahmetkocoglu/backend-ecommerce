@@ -11,6 +11,7 @@ class UserRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getUsers)
+        this.router.get('/me', this.controller.getMe)
     }
 }
 

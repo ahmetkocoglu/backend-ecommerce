@@ -14,4 +14,17 @@ export default class CampaignController {
             return res.status(401).send({ message: "error" })
         }
     }
+
+    async getMe(req: Request, res: Response) {
+        try {
+            const user = await UserRepository.me(req.body.authUser.userId)
+            if (!user) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ message: "", user })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
 }

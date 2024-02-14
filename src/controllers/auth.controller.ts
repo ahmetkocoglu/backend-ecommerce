@@ -33,14 +33,14 @@ export default class AuthController {
     }
     
     async register(req: Request, res: Response){
-        const {email, password} = req.body
-        if (!email && !password){
+        const {name, email, password} = req.body
+        if (!name && !email && !password){
             res.status(400).send({message:"Email and Password can not be empty"})
             return;
         }
 
         try {
-            const savedUser = await UserRepository.register(email, password)
+            const savedUser = await UserRepository.register(name, email, password)
 
             res.status(200).send({message: "Register successful", user: savedUser})
         } catch (error) {
@@ -54,17 +54,21 @@ export default class AuthController {
         if(!authorizationHeader || !authorizationHeader.startsWith("Bearer ")){
             return res.status(401).json({success: false, message: "Invalid authorization header"})
         } else {
-            const token = authorizationHeader.replace("Bearer ", "")
-            const verify = jwt.verify(token, "123")
-            const decode: any = verify ? jwt.decode(token) : null
-
-            if (!decode) return res.status(401).json({success: false, message: "Invalid authorization"})
-
-            const userId = decode.id
-            const userEmail = decode.email
-            const userConfirm = decode.confirm
-
-            req.body.authUser = {userId, userEmail, userConfirm}
+            try{
+                const token = authorizationHeader.replace("Bearer ", "")
+                const verify = jwt.verify(token, "123")
+                const decode: any = verify ? jwt.decode(token) : null
+    
+                if (!decode) return res.status(401).json({success: false, message: "Invalid authorization"})
+    
+                const userId = decode.id
+                const userEmail = decode.email
+                const userConfirm = decode.confirm
+    
+                req.body.authUser = {userId, userEmail, userConfirm}
+            } catch (error) {
+                return res.status(401).json({success: false, message: "Invalid authorization"})
+            }
         }
 
         next()
