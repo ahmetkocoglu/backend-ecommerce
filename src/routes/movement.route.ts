@@ -1,9 +1,11 @@
 import { Router } from "express"
 import MovementController from "../controllers/movement.controller"
+import AuthController from "../controllers/auth.controller"
 
 class MovementRoutes {
     router = Router()
     controller = new MovementController()
+    auth = new AuthController()
 
     constructor(){
         this.initializeRoutes()
@@ -12,7 +14,7 @@ class MovementRoutes {
     initializeRoutes() {
         this.router.get('/', this.controller.getMovements)
         this.router.post('/', this.controller.setMovements)
-        this.router.post('/add-basket', this.controller.addBasket)
+        this.router.post('/add-basket', this.auth.addBodyUser, this.controller.addBasket)
     }
 }
 

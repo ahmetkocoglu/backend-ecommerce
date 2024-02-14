@@ -40,18 +40,9 @@ export default class MovementController {
         }
     }
     async addBasket(req: Request, res: Response) {
-        const { productId, quantity } = req.body
-        const token = req.headers.authorization?.replace('Bearer ', '') as string
-
-        let userId;
-
-        try {
-            const verify = jwt.verify(token, "123")
-            const decode: any = verify ? jwt.decode(token) : null
-            userId = decode.id;
-        } catch (error) {
-            return res.status(401).send({ message: error })
-        }
+        const { productId, quantity, authUser } = req.body
+        
+        const userId = authUser.userId;
 
         if (!userId) return res.status(401).send({ message: "no user" })
 
