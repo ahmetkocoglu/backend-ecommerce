@@ -15,6 +15,7 @@ class MovementRoutes {
         this.router.get('/', this.controller.getMovements)
         this.router.post('/', this.controller.setMovements)
         this.router.post('/add-basket', this.auth.addBodyUser, this.controller.addBasket)
+        this.router.post('/remove-basket', this.auth.addBodyUser, this.controller.removeBasket)
     }
 }
 

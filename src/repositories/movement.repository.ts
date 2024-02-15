@@ -1,4 +1,5 @@
 import Movement from "../models/movement.model"
+import Product from "../models/product.model";
 
 interface IMovementRepository {
     row(productId: number): Promise<Movement | null>;
@@ -17,6 +18,7 @@ interface IMovementRepository {
         total: number,
         description: string
     ): Promise<Movement | null>;
+    deleteBasket(id: number, userId: number): Promise<boolean>;
 }
 
 class MovementRepository implements IMovementRepository {
@@ -34,13 +36,19 @@ class MovementRepository implements IMovementRepository {
     }
     async basket(userId: number): Promise<Array<Movement>> {
         try {
-            return await Movement.findAll({ where: { userId, process_type: 'basket' } })
+            return await Movement.findAll({
+                where: { userId, process_type: 'basket' },
+                include: [{
+                    model: Product,
+                    attributes: ['title'],
+                }]
+            })
         } catch (error) {
             throw new Error("Couldn't find")
         }
     }
     async payHeaderInsert(userId: number, total: number, tax: number): Promise<number> {
-      return Movement.create({
+        return Movement.create({
             userId, processType: "pay", tax, total, description: "Ödeme işlemi yapıldı"
         }).then((res) => {
             return res.dataValues.id
@@ -51,7 +59,7 @@ class MovementRepository implements IMovementRepository {
 
     async payRowUpdate(userId: number, payId: number): Promise<number> {
         return Movement.update(
-            { movementId: payId, type: false, processType: 'pay' }, 
+            { movementId: payId, type: false, processType: 'pay' },
             { where: { userId: userId, processType: 'basket' } })
             .then((res) => {
                 return res[0]
@@ -77,6 +85,16 @@ class MovementRepository implements IMovementRepository {
             })
         } catch (error) {
             throw new Error("error")
+        }
+    }
+    async deleteBasket(id: number, userId: number): Promise<boolean> {
+        try {
+            await Movement.destroy({
+                where: { id, userId, process_type: 'basket' }
+            })
+            return true
+        } catch (error) {
+            throw new Error("Couldn't find")
         }
     }
 }

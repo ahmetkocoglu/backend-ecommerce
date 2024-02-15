@@ -16,7 +16,7 @@ export default class Rating extends BaseModel {
     @Column({type: DataType.INTEGER, field: "user_id"})
     declare userId: number;
 
-    @BelongsTo(() => Users, 'product_id')
+    @BelongsTo(() => Users, 'user_id')
     user: Users | undefined
 
     @Column({ type: DataType.TINYINT, field: "rating" })

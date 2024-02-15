@@ -41,14 +41,14 @@ export default class MovementController {
     }
     async addBasket(req: Request, res: Response) {
         const { productId, quantity, authUser } = req.body
-        
+
         const userId = authUser.userId;
 
         if (!userId) return res.status(401).send({ message: "no user" })
 
         const productRow = await productRepository.row(productId)
         if (!productRow) return res.status(401).send({ message: "no product" })
-        
+
         const priceRow = await priceRepository.row(productId)
         if (!priceRow) return res.status(401).send({ message: "no price" })
 
@@ -71,5 +71,14 @@ export default class MovementController {
             "ürün sepete eklendi")
 
         res.status(200).send({ message: "", data: insert })
+    }
+    async removeBasket(req: Request, res: Response) {
+        const { movements, authUser } = req.body
+
+        for (const movement of movements) {
+            await movementRepository.deleteBasket(parseInt(movement), authUser.userId)
+        }
+
+        res.status(200).send({ message: "success", movements })
     }
 }
