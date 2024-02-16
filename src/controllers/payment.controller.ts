@@ -5,16 +5,8 @@ import axios from "axios";
 
 export default class PaymentController {
     async pay(req: Request, res: Response) {
-        const token = req.headers.authorization?.replace('Bearer ', '') as string
-        let userId: number;
-
-        try {
-            const verify = jwt.verify(token, "123")
-            const decode: any = verify ? jwt.decode(token) : null
-            userId = decode.id;
-        } catch (error) {
-            return res.status(401).send({ message: error })
-        }
+        const { authUser } = req.body
+        const userId = authUser.userId
 
         if (!userId) return res.status(401).send({ message: "no user" })
 
@@ -34,7 +26,7 @@ export default class PaymentController {
             const cardNumber = req.body.cardNumber.replace(/\s/g, '');
             const expMonthYear = req.body.expMonthYear
             const cvCode = req.body.cvCode
-            const installments = req.body.installments
+            const installments = req.body.installments ?? 0
 
             await axios.post("http://localhost:3070/validation", {
                 cardName: cardName,
@@ -65,19 +57,19 @@ export default class PaymentController {
 
                         await movementRepository.payRowUpdate(userId, payId)
 
-                        return res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, payId });
+                        const userBasket = await movementRepository.basket(userId)
+
+                        return res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, payId, basket: userBasket });
                     })
                     .catch((error) => {
                         console.log(error);
                         return res.status(400).send({ message: "hatalı" })
                     });
             } else {
-                res.status(200).send({ message: "banka ödeme işlemini red etti" })
+                return res.status(200).send({ message: "banka ödeme işlemini red etti" })
             }
-
-            res.status(200).send({ message: "---" })
         } else {
-            res.status(200).send({ message: "no basket" })
+            return res.status(200).send({ message: "no basket" })
         }
     }
     async test(req: Request, res: Response) {
