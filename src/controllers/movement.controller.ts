@@ -79,6 +79,8 @@ export default class MovementController {
             await movementRepository.deleteBasket(parseInt(movement), authUser.userId)
         }
 
-        res.status(200).send({ message: "success", movements })
+        const userBasket = await movementRepository.basket(authUser.userId)
+
+        res.status(200).send({ message: "success", basket: userBasket })
     }
 }
