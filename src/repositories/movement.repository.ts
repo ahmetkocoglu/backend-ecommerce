@@ -4,6 +4,7 @@ import Product from "../models/product.model";
 interface IMovementRepository {
     row(productId: number): Promise<Movement | null>;
     list(userId: number): Promise<Array<Movement>>;
+    userOrders(userId: number): Promise<Array<Movement>>;
     basket(userId: number): Promise<Array<Movement>>;
     payHeaderInsert(userId: number, total: number, tax: number): Promise<Number>;
     payRowUpdate(userId: number, payId: number): Promise<Number>;
@@ -30,6 +31,19 @@ class MovementRepository implements IMovementRepository {
     async list(userId: number): Promise<Array<Movement>> {
         try {
             return await Movement.findAll({ where: { userId } })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async userOrders(userId: number): Promise<Array<Movement>> {
+        try {
+            return await Movement.findAll({ 
+                where: { userId, process_type: "pay" },
+                include: [{
+                    model: Product,
+                    attributes: ['title']
+                }]
+            })
         } catch (error) {
             throw new Error("Couldn't find")
         }
