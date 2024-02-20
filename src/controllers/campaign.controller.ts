@@ -14,6 +14,18 @@ export default class CampaignController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async getBasketCampaigns(req: Request, res: Response) {
+        try {
+            const list = await CampaignRepository.list()
+            if (!list) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ message: "", list })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
     async setCampaigns(req: Request, res: Response) {
         const {productId, title, description, type} = req.body
         try {

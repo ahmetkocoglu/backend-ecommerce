@@ -24,4 +24,15 @@ export default class CouponController {
             return res.status(401).send({ message: "error", error })
         }
     }
+    async setUseCoupon(req: Request, res: Response) {
+        const {code, authUser} = req.body
+        const userId = authUser.userId
+        try {
+            const row = await couponRepository.getUseCoupon(userId, code)
+
+            res.status(200).send({ message: "", data: row })
+        } catch (error) {
+            return res.status(401).send({ message: "error", error })
+        }
+    }
 }

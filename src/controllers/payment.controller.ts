@@ -1,14 +1,18 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken"
 import movementRepository from "../repositories/movement.repository";
+import couponRepository from "../repositories/coupon.repository";
 import axios from "axios";
 
 export default class PaymentController {
     async pay(req: Request, res: Response) {
-        const { authUser } = req.body
+        const { authUser, coupon } = req.body
         const userId = authUser.userId
 
         if (!userId) return res.status(401).send({ message: "no user" })
+
+        const rowCoupon = await couponRepository.getUseCoupon(userId, coupon)
+        let discountCouponPrice: number =(rowCoupon ? (rowCoupon.price) : 0)
 
         const list = await movementRepository.basket(userId)
 
@@ -17,7 +21,7 @@ export default class PaymentController {
                 return { total: k.total, tax: k.tax, productId: k.productId }
             })
 
-            const total = (basketList.reduce((acc, o) => acc + parseFloat(o.total), 0));
+            const total = (basketList.reduce((acc, o) => acc + parseFloat(o.total), 0)) - discountCouponPrice;
             const totalTax = (basketList.reduce((acc, o) => acc + parseFloat(o.tax), 0));
 
             let provisionCode;
@@ -53,13 +57,15 @@ export default class PaymentController {
                     .then(async (response: any) => {
                         if (response.data.status === true) {
                         }
-                        const payId = await movementRepository.payHeaderInsert(userId, total, totalTax)
+                        const payId = await movementRepository.payHeaderInsert(userId, total, totalTax, discountCouponPrice)
 
                         await movementRepository.payRowUpdate(userId, payId)
 
+                        // coupon confirm update
+
                         const userBasket = await movementRepository.basket(userId)
 
-                        return res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, payId, basket: userBasket });
+                        return res.status(200).send({ message: "Payment", body: req.body, userId, total, basketList, payId, basket: userBasket, rowCoupon });
                     })
                     .catch((error) => {
                         console.log(error);

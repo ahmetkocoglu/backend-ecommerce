@@ -6,7 +6,7 @@ interface IMovementRepository {
     list(userId: number): Promise<Array<Movement>>;
     userOrders(userId: number): Promise<Array<Movement>>;
     basket(userId: number): Promise<Array<Movement>>;
-    payHeaderInsert(userId: number, total: number, tax: number): Promise<Number>;
+    payHeaderInsert(userId: number, total: number, tax: number, discountCouponPrice: number): Promise<Number>;
     payRowUpdate(userId: number, payId: number): Promise<Number>;
     insert(
         productId: number,
@@ -37,7 +37,7 @@ class MovementRepository implements IMovementRepository {
     }
     async userOrders(userId: number): Promise<Array<Movement>> {
         try {
-            return await Movement.findAll({ 
+            return await Movement.findAll({
                 where: { userId, process_type: "pay" },
                 include: [{
                     model: Product,
@@ -61,9 +61,9 @@ class MovementRepository implements IMovementRepository {
             throw new Error("Couldn't find")
         }
     }
-    async payHeaderInsert(userId: number, total: number, tax: number): Promise<number> {
+    async payHeaderInsert(userId: number, total: number, tax: number, discountCouponPrice: number): Promise<number> {
         return Movement.create({
-            userId, processType: "pay", tax, total, description: "Ödeme işlemi yapıldı"
+            userId, processType: "pay", tax, total, description: "Ödeme işlemi yapıldı" + (discountCouponPrice > 0 ? " " + discountCouponPrice + " indirim yapıldı" : "")
         }).then((res) => {
             return res.dataValues.id
         }).catch(() => {
