@@ -2,6 +2,7 @@ import { Table, Column, DataType, HasOne, HasMany} from "sequelize-typescript"
 import BaseModel from "./base.model";
 import Price from "./price.model";
 import Rating from "./rating.model";
+import Variation from "./variation.model";
 
 @Table({ tableName: "products" })
 export default class Product extends BaseModel {
@@ -31,4 +32,7 @@ export default class Product extends BaseModel {
 
     @HasMany(() => Rating, 'product_id')
     rating: Rating | undefined
+
+    @HasMany(() => Variation, 'product_id')
+    variation: Variation | undefined
 }

@@ -15,11 +15,17 @@ export default class FavoriteController {
         }
     }
     async setFavorites(req: Request, res: Response) {
-        const {productId, userId} = req.body
-        try {
-            const insert = await favoriteRepository.insert(productId, userId)
+        const { productId, authUser } = req.body
+        const userId = authUser.userId
 
-            res.status(200).send({ message: "", data: insert })
+        try {
+            const row = await favoriteRepository.one(productId, userId)
+
+            if (!row) {
+                const insert = await favoriteRepository.insert(productId, userId)
+                return res.status(200).send({ message: "", data: insert })
+            }
+            return res.status(200).send({ message: "", data: row })
         } catch (error) {
             return res.status(401).send({ message: "error" })
         }

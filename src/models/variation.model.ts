@@ -1,4 +1,4 @@
-import { Table, Column, DataType, ForeignKey } from "sequelize-typescript"
+import { Table, Column, DataType, ForeignKey, BelongsTo } from "sequelize-typescript"
 import Product from "./product.model"
 import BaseModel from "./base.model";
 
@@ -10,10 +10,17 @@ export default class Variation extends BaseModel {
     @Column({ type: DataType.STRING(100), field: "seo" })
     seo!: string
 
-    @Column({ type: DataType.STRING(255), field: "description"})
-    description!: string
-
     @ForeignKey(() => Product)
-    @Column({field: "product_id"})
-    productId!: number;
+    @Column({type: DataType.INTEGER, field: "product_id"})
+    declare productId: number;
+
+    @BelongsTo(() => Product, 'product_id')
+    product: Product | undefined
+
+    @ForeignKey(() => Variation)
+    @Column({type: DataType.INTEGER, field: "variation_id"})
+    declare variationId: number;
+
+    @BelongsTo(() => Variation, 'variation_id')
+    variation: Variation | undefined
 }

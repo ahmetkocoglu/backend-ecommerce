@@ -1,4 +1,4 @@
-import { Table, Column, ForeignKey} from "sequelize-typescript"
+import { Table, Column, ForeignKey, BelongsTo, DataType} from "sequelize-typescript"
 import BaseModel from "./base.model";
 import Product from "./product.model";
 import Users from "./user.model";
@@ -6,10 +6,16 @@ import Users from "./user.model";
 @Table({ tableName: "favorites" })
 export default class Favorite extends BaseModel {
     @ForeignKey(() => Product)
-    @Column({field: "product_id"})
-    productId!: number;
+    @Column({type: DataType.INTEGER, field: "product_id"})
+    declare productId: number;
+
+    @BelongsTo(() => Product, 'product_id')
+    product: Product | undefined
 
     @ForeignKey(() => Users)
-    @Column({field: "user_id"})
-    userId!: number;
+    @Column({type: DataType.INTEGER, field: "user_id"})
+    declare userId: number;
+
+    @BelongsTo(() => Users, 'user_id')
+    user: Users | undefined
 }

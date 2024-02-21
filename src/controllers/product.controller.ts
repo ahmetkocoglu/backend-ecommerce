@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import ProductRepository from "../repositories/product.repository";
+import favoriteRepository from "../repositories/favorite.repository";
 
 export default class ProductController {
     async getProducts(req: Request, res: Response) {
@@ -17,6 +18,9 @@ export default class ProductController {
         }
     }
     async getProduct(req: Request, res: Response) {
+        const { authUser } = req.body
+        const userId = authUser.userId
+
         const url = require('url');
         const querystring = require('querystring');
 
@@ -30,18 +34,20 @@ export default class ProductController {
         try {
             if (id === true) {
                 const row = await ProductRepository.productId(parseInt(req.params.seo))
+                const rowFavorite = await favoriteRepository.one(row?.id ?? 0, userId)
                 if (!row) {
                     return res.status(401).send({ message: "no valid data found" })
                 }
 
-                res.status(200).send({ message: "", row })
+                res.status(200).send({ message: "", row, favorite: rowFavorite })
             } else {
                 const row = await ProductRepository.productSeo(req.params.seo)
+                const rowFavorite = await favoriteRepository.one(row?.id ?? 0, userId)
                 if (!row) {
                     return res.status(401).send({ message: "no valid data found" })
                 }
 
-                res.status(200).send({ message: "", row })
+                res.status(200).send({ message: "", row, favorite: rowFavorite ? true : false })
             }
         } catch (error) {
             return res.status(401).send({ message: "error" })

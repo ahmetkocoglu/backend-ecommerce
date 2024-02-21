@@ -2,17 +2,28 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken"
 import movementRepository from "../repositories/movement.repository";
 import couponRepository from "../repositories/coupon.repository";
+import campaignRepository from "../repositories/campaign.repository";
 import axios from "axios";
 
 export default class PaymentController {
     async pay(req: Request, res: Response) {
-        const { authUser, coupon } = req.body
+        const { authUser, coupon, campaign } = req.body
         const userId = authUser.userId
 
         if (!userId) return res.status(401).send({ message: "no user" })
 
         const rowCoupon = await couponRepository.getUseCoupon(userId, coupon)
-        let discountCouponPrice: number =(rowCoupon ? (rowCoupon.price) : 0)
+        const discountCouponPrice: number =Number(rowCoupon ? (rowCoupon.price) : 0)
+
+        let campaignPrice = 0
+
+        if(campaign){
+            const list = await campaignRepository.list()
+            campaignPrice = Number(list.reduce(
+                (acc: number, o: any) => acc + parseFloat(o.price),
+                0
+              ));
+        }
 
         const list = await movementRepository.basket(userId)
 
@@ -21,7 +32,7 @@ export default class PaymentController {
                 return { total: k.total, tax: k.tax, productId: k.productId }
             })
 
-            const total = (basketList.reduce((acc, o) => acc + parseFloat(o.total), 0)) - discountCouponPrice;
+            const total = (basketList.reduce((acc, o) => acc + parseFloat(o.total), 0)) - (discountCouponPrice + campaignPrice);
             const totalTax = (basketList.reduce((acc, o) => acc + parseFloat(o.tax), 0));
 
             let provisionCode;
@@ -57,7 +68,7 @@ export default class PaymentController {
                     .then(async (response: any) => {
                         if (response.data.status === true) {
                         }
-                        const payId = await movementRepository.payHeaderInsert(userId, total, totalTax, discountCouponPrice)
+                        const payId = await movementRepository.payHeaderInsert(userId, total, totalTax, (discountCouponPrice + campaignPrice))
 
                         await movementRepository.payRowUpdate(userId, payId)
 
