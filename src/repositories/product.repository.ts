@@ -3,6 +3,7 @@ import Product from "../models/product.model"
 import { Op } from "sequelize";
 import Rating from "../models/rating.model";
 import Variation from "../models/variation.model";
+import Category from "../models/category.model";
 
 interface IProductRepository {
     row(productId: number): Promise<Product | null>;

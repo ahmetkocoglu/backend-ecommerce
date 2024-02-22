@@ -19,7 +19,7 @@ export default class ProductController {
     }
     async getProduct(req: Request, res: Response) {
         const { authUser } = req.body
-        const userId = authUser.userId
+        const userId = authUser?.userId ?? 0
 
         const url = require('url');
         const querystring = require('querystring');

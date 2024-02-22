@@ -49,7 +49,7 @@ export default class AuthController {
     }
 
     addBodyUser(req: Request, res: Response, next: NextFunction) {
-        const authorizationHeader = req.header('Authorization');
+        const authorizationHeader = req.header('Authorization');        
         
         if(!authorizationHeader || !authorizationHeader.startsWith("Bearer ")){
             return res.status(401).json({success: false, message: "Invalid authorization header"})
@@ -67,7 +67,10 @@ export default class AuthController {
     
                 req.body.authUser = {userId, userEmail, userConfirm}
             } catch (error) {
-                return res.status(401).json({success: false, message: "Invalid authorization"})
+                if(req.baseUrl.endsWith('product')){
+                } else {
+                    return res.status(401).json({success: false, message: "Invalid authorization"})
+                }
             }
         }
 
