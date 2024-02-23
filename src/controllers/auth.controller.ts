@@ -18,14 +18,15 @@ export default class AuthController {
             }
 
             const token = jwt.sign(
-                {id: loginUser.id, email: loginUser.email, confirm: loginUser.confirm},
+                {id: loginUser.id, email: loginUser.email, confirm: loginUser.confirm, role: loginUser.role},
                 '123',
                 {expiresIn: '12h'}
             );
             res.status(200).send({ message: "Login successful", user: {
                 id: loginUser.id,
                 email: loginUser.email,
-                confirm: loginUser.confirm
+                confirm: loginUser.confirm,
+                role: loginUser.role
             }, token})
         } catch (error) {
             return res.status(401).send({message:"invalid email and/or password"})

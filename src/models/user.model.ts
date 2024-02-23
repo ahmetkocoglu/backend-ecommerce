@@ -3,6 +3,7 @@ import BaseModel from './base.model'
 import Rating from './rating.model'
 import Coupon from './coupon.model'
 import Favorite from './favorite.model'
+import { UserEnum } from '../enums/user.enum'
 
 @Table({ tableName: "users" })
 export default class Users extends BaseModel {
@@ -12,8 +13,16 @@ export default class Users extends BaseModel {
     @Column({ type: DataType.STRING(100), field: "email", unique: true })
     email!: string
 
-    @Column({ type: DataType.STRING(100), field: "password"})
+    @Column({ type: DataType.STRING(100), field: "password" })
     password!: string
+
+    @Column({
+        type: DataType.ENUM,
+        field: "role", 
+        values: Object.values(UserEnum), 
+        defaultValue: UserEnum.USER
+    })
+    declare role: UserEnum
 
     @HasMany(() => Rating, 'user_id')
     ratings: Rating[] | undefined
