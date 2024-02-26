@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import ProductRepository from "../repositories/product.repository";
 import favoriteRepository from "../repositories/favorite.repository";
+import priceRepository from "../repositories/price.repository";
 
 export default class ProductController {
     async getProducts(req: Request, res: Response) {
-        console.log('getProducts >> ');
-        
         try {
             const list = await ProductRepository.list()
             if (!list) {
@@ -114,7 +113,10 @@ export default class ProductController {
             stockCode,
             barcode,
             associative,
-            tax
+            tax,
+            salePrice,
+            discountPrice,
+            discountRate,
         } = req.body
         try {
             const insert = await ProductRepository.insert(
@@ -125,6 +127,9 @@ export default class ProductController {
                 barcode,
                 associative,
                 tax)
+
+            if (insert)
+                await priceRepository.insert(insert?.id, salePrice, discountPrice, discountRate)
 
             res.status(200).send({ message: "successful", data: insert })
         } catch (error) {
@@ -141,8 +146,12 @@ export default class ProductController {
             stockCode,
             barcode,
             associative,
-            tax
+            tax,
+            salePrice,
+            discountPrice,
+            discountRate,
         } = req.body
+
         try {
             if (id) {
                 const row = await ProductRepository.productUpdate(id, {
@@ -154,6 +163,9 @@ export default class ProductController {
                     associative,
                     tax
                 })
+
+                await priceRepository.update(id, salePrice, discountPrice, discountRate)
+
                 if (!row) {
                     return res.status(401).send({ message: "no valid data found" })
                 }
