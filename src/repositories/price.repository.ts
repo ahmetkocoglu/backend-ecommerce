@@ -9,6 +9,12 @@ interface IPriceRepository {
         discountPrice: number,
         discountRate: number
     ): Promise<number | null>;
+    updateProductId(
+        productId: number,
+        price: number,
+        discountPrice: number,
+        discountRate: number
+    ): Promise<number | null>;
     productUpdate(
         id: number,
         price: number,
@@ -47,6 +53,23 @@ class PriceRepository implements IPriceRepository {
         return await Price.update(
             { price, discountPrice, discountRate },
             { where: { id } }
+        )
+            .then((res) => {
+                return res[0]
+            })
+            .catch((error) => {
+                throw new Error("Couldn't find")
+            })
+    }
+    async updateProductId(
+        productId: number,
+        price: number,
+        discountPrice: number,
+        discountRate: number
+    ): Promise<number | null> {
+        return await Price.update(
+            { price, discountPrice, discountRate },
+            { where: { productId } }
         )
             .then((res) => {
                 return res[0]

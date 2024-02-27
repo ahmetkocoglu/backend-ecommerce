@@ -16,6 +16,18 @@ export default class ProductController {
             return res.status(401).send({ message: "error", error })
         }
     }
+    async getDashboardProducts(req: Request, res: Response) {
+        try {
+            const list = await ProductRepository.allList()
+            if (!list) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ message: "", list })
+        } catch (error) {
+            return res.status(401).send({ message: "error", error })
+        }
+    }
     async getProduct(req: Request, res: Response) {
         const { authUser } = req.body
         const userId = authUser?.userId ?? 0
@@ -147,6 +159,7 @@ export default class ProductController {
             barcode,
             associative,
             tax,
+            confirm,
             salePrice,
             discountPrice,
             discountRate,
@@ -161,15 +174,22 @@ export default class ProductController {
                     stockCode,
                     barcode,
                     associative,
-                    tax
+                    tax,
+                    confirm
                 })
 
-                await priceRepository.update(id, salePrice, discountPrice, discountRate)
+                const price = await priceRepository.row(id)
+                if (price) {
+                    await priceRepository.updateProductId(id, salePrice, discountPrice, discountRate)
+                }
+                else {
+                    await priceRepository.insert(id, salePrice, discountPrice, discountRate)
+                }
 
                 if (!row) {
                     return res.status(401).send({ message: "no valid data found" })
                 }
-                res.status(200).send({ status: true, message: "", row })
+                res.status(200).send({ status: true, message: "", row, price })
             } else {
                 res.status(401).send({ message: "no valid data found" })
             }

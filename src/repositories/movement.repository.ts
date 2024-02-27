@@ -1,10 +1,12 @@
 import Movement from "../models/movement.model"
 import Product from "../models/product.model";
+import Users from "../models/user.model";
 
 interface IMovementRepository {
     row(productId: number): Promise<Movement | null>;
     list(userId: number): Promise<Array<Movement>>;
     userOrders(userId: number): Promise<Array<Movement>>;
+    usersOrders(): Promise<Array<Movement>>;
     basket(userId: number): Promise<Array<Movement>>;
     payHeaderInsert(userId: number, total: number, tax: number, discountCouponPrice: number): Promise<Number>;
     payRowUpdate(userId: number, payId: number): Promise<Number>;
@@ -42,6 +44,22 @@ class MovementRepository implements IMovementRepository {
                 include: [{
                     model: Product,
                     attributes: ['title']
+                }]
+            })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async usersOrders(): Promise<Array<Movement>> {
+        try {
+            return await Movement.findAll({
+                where: { process_type: "pay" },
+                include: [{
+                    model: Product,
+                    attributes: ['title']
+                },{
+                    model: Users,
+                    attributes: ['name']
                 }]
             })
         } catch (error) {
