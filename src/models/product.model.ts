@@ -6,6 +6,7 @@ import Variation from "./variation.model";
 import Campaign from "./campaign.model";
 import Category from "./category.model";
 import Favorite from "./favorite.model";
+import ProductCategory from "./product_category";
 
 @Table({ tableName: "products" })
 export default class Product extends BaseModel {
@@ -61,4 +62,7 @@ export default class Product extends BaseModel {
 
     @HasMany(() => Favorite, 'product_id')
     favorites: Favorite[] | undefined
+
+    @HasMany(() => ProductCategory, 'product_id')
+    productCategory: ProductCategory[] | undefined
 }

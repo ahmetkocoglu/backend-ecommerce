@@ -1,15 +1,38 @@
+import { Op } from "sequelize";
 import ProductCategory from "../models/product_category"
 
 interface IProductCategoryRepository {
+    one(
+        productId: number,
+        categoryId: number
+    ): Promise<ProductCategory | null>;
     list(): Promise<Array<ProductCategory>>;
     insert(
         productId: number,
         categoryId: number
     ): Promise<ProductCategory | null>;
+    destroyProductCategory(
+        productId: number,
+        categories: number[]
+    ): Promise<boolean>;
 }
 
 class ProductCategoryRepository implements IProductCategoryRepository {
-    async list(): Promise<Array<ProductCategory>>{
+    async one(
+        productId: number,
+        categoryId: number
+    ): Promise<ProductCategory | null> {
+        try {
+            return await ProductCategory.findOne({
+                where: {
+                    productId, categoryId
+                }
+            })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async list(): Promise<Array<ProductCategory>> {
         try {
             return await ProductCategory.findAll()
         } catch (error) {
@@ -19,9 +42,26 @@ class ProductCategoryRepository implements IProductCategoryRepository {
     async insert(
         productId: number,
         categoryId: number
-    ): Promise<ProductCategory | null>{
+    ): Promise<ProductCategory | null> {
         try {
-            return await ProductCategory.create({productId, categoryId})
+            return await ProductCategory.create({ productId, categoryId })
+        } catch (error) {
+            throw new Error("Couldn't find")
+        }
+    }
+    async destroyProductCategory(
+        productId: number,
+        categories: number[]
+    ): Promise<boolean> {
+        try {
+            await ProductCategory.destroy({
+                where: {
+                    productId, categoryId: {
+                        [Op.notIn]: categories
+                    }
+                }
+            })
+            return true
         } catch (error) {
             throw new Error("Couldn't find")
         }

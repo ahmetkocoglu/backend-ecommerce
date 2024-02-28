@@ -28,11 +28,18 @@ export default class ProductCategoryController {
     }
 
     async setProductCategory(req: Request, res: Response) {
-        const {productId, categoryId} = req.body
+        const { productId, categories } = req.body
         try {
-            const insert = await ProductCategoryRepository.insert(productId, categoryId)
+            await ProductCategoryRepository.destroyProductCategory(productId, categories)
+            console.log('>>>>>');
+            
+            for (const category of categories) {
+                const one = await ProductCategoryRepository.one(productId, category)
+                if (!one)
+                    await ProductCategoryRepository.insert(productId, category)
+            }
 
-            res.status(200).send({ message: "", data: insert })
+            res.status(200).send({ message: "", status: true })
         } catch (error) {
             return res.status(401).send({ message: "error" })
         }

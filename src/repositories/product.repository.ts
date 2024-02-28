@@ -4,6 +4,7 @@ import { Op } from "sequelize";
 import Rating from "../models/rating.model";
 import Variation from "../models/variation.model";
 import Category from "../models/category.model";
+import ProductCategory from "../models/product_category";
 
 interface IProductRepository {
     row(productId: number): Promise<Product | null>;
@@ -87,6 +88,9 @@ class ProductRepository implements IProductRepository {
                 }, {
                     model: Variation,
                     attributes: ['id', 'title', 'seo', 'variation_id']
+                }, {
+                    model: ProductCategory,
+                    attributes: ['category_id']
                 }]
             })
         } catch (error) {
