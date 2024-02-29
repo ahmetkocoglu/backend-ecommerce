@@ -9,7 +9,7 @@ export default class Coupon extends BaseModel {
     @Column({type: DataType.INTEGER, field: "user_id"})
     declare userId: number;
     
-    @BelongsTo(() => Users, 'user_id')
+    @BelongsTo(() => Users)
     user: Users | undefined
 
     @Column({ type: DataType.STRING(150), field: "code"})

@@ -8,7 +8,7 @@ export default class Campaign extends BaseModel {
     @Column({field: "product_id"})
     productId!: number;
     
-    @BelongsTo(() => Product, 'product_id')
+    @BelongsTo(() => Product)
     product: Product | undefined
 
     @Column({ type: DataType.STRING(150), field: "title"})

@@ -17,6 +17,6 @@ export default class Price extends BaseModel {
     @Column({type: DataType.INTEGER, field: "product_id"})
     declare productId: number
 
-    @BelongsTo(() => Product, 'product_id')
+    @BelongsTo(() => Product)
     product: Product | undefined
 }

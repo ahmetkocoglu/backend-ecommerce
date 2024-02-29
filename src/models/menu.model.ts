@@ -14,6 +14,6 @@ export default class Menu extends BaseModel {
     @Column({type: DataType.INTEGER, field: "menu_id"})
     declare menuId: number;
 
-    @BelongsTo(() => Menu, 'menu_id')
+    @BelongsTo(() => Menu)
     menu: Menu | undefined
 }

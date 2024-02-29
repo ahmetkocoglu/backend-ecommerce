@@ -11,6 +11,7 @@ class CategoryRoutes {
 
     initializeRoutes() {
         this.router.get('/', this.controller.getCategories)
+        this.router.get('/:slug', this.controller.getCategoryProducts)
         this.router.post('/', this.controller.setCategory)
     }
 }

@@ -9,21 +9,21 @@ export default class Movement extends BaseModel {
     @Column({type: DataType.INTEGER, field: "product_id"})
     declare productId: number;
 
-    @BelongsTo(() => Product, 'product_id')
+    @BelongsTo(() => Product)
     product: Product | undefined
 
     @ForeignKey(() => Users)
     @Column({type: DataType.INTEGER, field: "user_id"})
     declare userId: number;
 
-    @BelongsTo(() => Users, 'user_id')
+    @BelongsTo(() => Users)
     user: Users | undefined
 
     @ForeignKey(() => Movement)
     @Column({field: "movement_id"})
     movementId!: number;
 
-    @BelongsTo(() => Movement, 'movement_id')
+    @BelongsTo(() => Movement)
     movement: Movement | undefined
 
     @HasMany(() => Movement, 'movement_id')

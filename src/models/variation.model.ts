@@ -14,13 +14,13 @@ export default class Variation extends BaseModel {
     @Column({type: DataType.INTEGER, field: "product_id"})
     declare productId: number;
 
-    @BelongsTo(() => Product, 'product_id')
+    @BelongsTo(() => Product)
     product: Product | undefined
 
     @ForeignKey(() => Variation)
     @Column({type: DataType.INTEGER, field: "variation_id"})
     declare variationId: number;
 
-    @BelongsTo(() => Variation, 'variation_id')
+    @BelongsTo(() => Variation)
     variation: Variation | undefined
 }

@@ -14,6 +14,19 @@ export default class CategoryController {
             return res.status(401).send({ message: "error" })
         }
      }
+     async getCategoryProducts(req: Request, res: Response) {
+        const slug = req.params.slug
+        try {
+            const list = await CategoryRepository.categoryProducts(slug)
+            if (!list) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            res.status(200).send({ message: "", list })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+     }
 
      async setCategory(req: Request, res: Response) {
         const {title, description} = req.body

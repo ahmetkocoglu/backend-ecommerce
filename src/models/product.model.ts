@@ -21,7 +21,7 @@ export default class Product extends BaseModel {
     // @Column({type: DataType.INTEGER, field: "product_id"}) //TR 1 (ilişki id null), DE 2 (ilişki ıd 1) 
     // declare productId: number;
 
-    // @BelongsTo(() => Product, 'product_id')
+    // @BelongsTo(() => Product)
     // product: Product | undefined
 
     @Column({ type: DataType.STRING(150), field: "title"})

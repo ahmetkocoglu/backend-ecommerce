@@ -9,14 +9,14 @@ export default class Rating extends BaseModel {
     @Column({type: DataType.INTEGER, field: "product_id"})
     declare productId: number;
 
-    @BelongsTo(() => Product, 'product_id')
+    @BelongsTo(() => Product)
     product: Product | undefined
 
     @ForeignKey(() => Users)
     @Column({type: DataType.INTEGER, field: "user_id"})
     declare userId: number;
 
-    @BelongsTo(() => Users, 'user_id')
+    @BelongsTo(() => Users)
     user: Users | undefined
 
     @Column({ type: DataType.TINYINT, field: "rating" })

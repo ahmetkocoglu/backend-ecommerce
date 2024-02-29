@@ -7,15 +7,15 @@ import BaseModel from "./base.model";
 export default class ProductCategory extends BaseModel {
     @ForeignKey(() => Product)
     @Column({type: DataType.INTEGER, field: "product_id"})
-    productId!: number;
+    declare productId: number;
 
-    @BelongsTo(() => Product, 'product_id')
+    @BelongsTo(() => Product)
     product: Product | undefined
 
     @ForeignKey(() => Category)
     @Column({type: DataType.INTEGER, field: "category_id"})
-    categoryId!: number;
+    declare categoryId: number;
 
-    @BelongsTo(() => Category, 'category_id')
+    @BelongsTo(() => Category)
     category: Category | undefined
 }
