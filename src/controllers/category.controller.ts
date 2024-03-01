@@ -17,12 +17,25 @@ export default class CategoryController {
      async getCategoryProducts(req: Request, res: Response) {
         const slug = req.params.slug
         try {
-            const list = await CategoryRepository.categoryProducts(slug)
-            if (!list) {
+            const row = await CategoryRepository.categoryProducts(slug)
+            if (!row) {
                 return res.status(401).send({ message: "no valid data found" })
             }
 
-            res.status(200).send({ message: "", list })
+            const products = row.categoryProducts?.map((k: any) => {
+                return k.product
+            })
+
+            res.status(200).send({ message: "", row: {
+                category: {
+                    id: row.id,
+                    title: row.title,
+                    seo: row.seo,
+                    description: row.description,
+                    updatedAt: row.updatedAt,
+                },
+                products
+            } })
         } catch (error) {
             return res.status(401).send({ message: "error" })
         }

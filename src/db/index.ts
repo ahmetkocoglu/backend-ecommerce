@@ -5,7 +5,7 @@ import Product from "../models/product.model";
 import Price from "../models/price.model";
 import Variation from "../models/variation.model";
 import Category from "../models/category.model";
-import ProductCategory from "../models/product_category";
+import ProductCategory from "../models/product.category.model";
 import Campaign from "../models/campaign.model";
 import Comment from "../models/comment.model";
 import Favorite from "../models/favorite.model";
@@ -13,6 +13,7 @@ import Movement from "../models/movement.model";
 import Rating from "../models/rating.model";
 import Coupon from "../models/coupon.model";
 import Menu from "../models/menu.model";
+import Content from "../models/content.model";
 
 class Database {
   public sequelize: Sequelize | undefined;
@@ -34,7 +35,7 @@ class Database {
         acquire: config.pool.acquire,
         idle: config.pool.idle
       },
-      models: [Users, Product, Price, Variation, Category, ProductCategory, Campaign, Comment, Favorite, Movement, Rating, Coupon, Menu]
+      models: [Users, Product, Price, Variation, Category, ProductCategory, Campaign, Comment, Content, Favorite, Movement, Rating, Coupon, Menu]
     });
 
     await this.sequelize

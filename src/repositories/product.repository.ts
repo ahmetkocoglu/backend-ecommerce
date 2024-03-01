@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 import Rating from "../models/rating.model";
 import Variation from "../models/variation.model";
 import Category from "../models/category.model";
-import ProductCategory from "../models/product_category";
+import ProductCategory from "../models/product.category.model";
 
 interface IProductRepository {
     row(productId: number): Promise<Product | null>;

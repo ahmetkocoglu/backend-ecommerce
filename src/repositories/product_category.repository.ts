@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import ProductCategory from "../models/product_category"
+import ProductCategory from "../models/product.category.model"
 
 interface IProductCategoryRepository {
     one(

@@ -7,6 +7,7 @@ import imagesRouters from "./images.route"
 import campaignRouters from "./campaign.route"
 import categoryRouters from "./category.route"
 import commentRouters from "./comment.route"
+import contentRouters from "./content.route"
 import couponRouters from "./coupon.route"
 import favoriteRouters from "./favorite.route"
 import movementRouters from "./movement.route"
@@ -31,6 +32,7 @@ export default class Routes {
         app.use('/api/v1/campaign', campaignRouters)
         app.use('/api/v1/category', categoryRouters)
         app.use('/api/v1/comment', commentRouters)
+        app.use('/api/v1/content', contentRouters)
         app.use('/api/v1/coupon', couponRouters)
         app.use('/api/v1/favorite', favoriteRouters)
         app.use('/api/v1/movement', movementRouters)

@@ -1,9 +1,11 @@
 import Category from "../models/category.model"
-import ProductCategory from "../models/product_category"
+import Price from "../models/price.model"
+import ProductCategory from "../models/product.category.model"
+import Product from "../models/product.model"
 
 interface ICategoryRepository {
     list(): Promise<Array<Category>>
-    categoryProducts(slug: string): Promise<Array<Category>>
+    categoryProducts(slug: string): Promise<Category | null>
     insert(title: string, description: string): Promise<Category | null>
 }
 
@@ -15,12 +17,22 @@ class CategoryRepository implements ICategoryRepository {
             throw new Error("Couldn't find")
         }
     }
-    async categoryProducts(slug: string): Promise<Array<Category>> {
+    async categoryProducts(slug: string): Promise<Category | null> {
         try {
-            return await Category.findAll({ 
+            return await Category.findOne({
                 where: { seo: slug },
+                attributes: { exclude: ['deletedAt', 'createdAt'] },
                 include: {
-                    model: ProductCategory
+                    model: ProductCategory,
+                    attributes: ['id'],
+                    include: [{
+                        model: Product,
+                        attributes: { exclude: ['deletedAt', 'createdAt'] },
+                        include: [{
+                            model: Price,
+                            attributes: ['price', 'discountPrice', 'discountRate']
+                        }]
+                    }]
                 }
             })
         } catch (error) {

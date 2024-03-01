@@ -1,6 +1,6 @@
 import { Table, Column, DataType, HasMany} from "sequelize-typescript"
 import BaseModel from "./base.model";
-import ProductCategory from "./product_category";
+import ProductCategory from "./product.category.model";
 
 @Table({ tableName: "categories" })
 export default class Category extends BaseModel {
@@ -13,6 +13,6 @@ export default class Category extends BaseModel {
     @Column({ type: DataType.STRING(255), field: "description"})
     description!: string
 
-    @HasMany(() => ProductCategory, 'category_id')
+    @HasMany(() => ProductCategory)
     categoryProducts: ProductCategory[] | undefined
 }
