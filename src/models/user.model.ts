@@ -19,7 +19,7 @@ export default class Users extends BaseModel {
     @Column({
         type: DataType.ENUM,
         field: "role", 
-        values: Object.values(UserEnum), 
+        values: Object.values(UserEnum), //['admin', 'user']
         defaultValue: UserEnum.USER
     })
     declare role: UserEnum
