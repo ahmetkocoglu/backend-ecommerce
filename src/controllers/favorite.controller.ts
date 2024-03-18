@@ -24,8 +24,10 @@ export default class FavoriteController {
             if (!row) {
                 const insert = await favoriteRepository.insert(productId, userId)
                 return res.status(200).send({ message: "", data: insert })
+            } else {
+                const _delete = await favoriteRepository.delete(productId, userId)
+                return res.status(200).send({ message: "", data: _delete })
             }
-            return res.status(200).send({ message: "", data: row })
         } catch (error) {
             return res.status(401).send({ message: "error" })
         }

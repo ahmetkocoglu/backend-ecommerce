@@ -15,12 +15,17 @@ export default class RatingController {
         }
     }
     async setRatings(req: Request, res: Response) {
-        const {productId, authUser, rating} = req.body
+        const { productId, authUser, rating } = req.body
         const userId = authUser.userId
         try {
-            const insert = await RatingRepository.insert(productId, userId, rating)
-
-            res.status(200).send({ message: "", data: insert })
+            const row = await RatingRepository.one(productId, userId)
+            if (row) {
+                const update = await RatingRepository.update(productId, userId, rating)
+                res.status(200).send({ message: "", data: update })
+            } else {
+                const insert = await RatingRepository.insert(productId, userId, rating)
+                res.status(200).send({ message: "", data: insert })
+            }
         } catch (error) {
             return res.status(401).send({ message: "error" })
         }
