@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 export default class AddressController {
     async getCities(req: Request, res: Response) {
-        const id = (req.params.id).replace('i', 'İ').replace('i', 'İ').toLocaleUpperCase()
+        const id = undefined
 
         const fs = require('fs')
         const file = await fs.promises.readFile('./public/address.json', 'utf8', (err: any, data: any) => {
@@ -13,18 +13,66 @@ export default class AddressController {
         const fileJson = JSON.parse(file)
 
         const cities: any[] = [];
-        let city: any = null;
 
         fileJson.map((k: any) => {
             k.sub.map((l: any) => {
-                if (id === undefined) {
-                    cities.push(l.name)
-                } else if (id === l.name) {
-                    city = { name: l.name, sub: l.sub }
+                cities.push(l.name)
+            })
+        })
+
+        res.status(200).send({ message: "Success", cities })
+    }
+    async getDistrict(req: Request, res: Response) {
+        const city = (req.params.city)
+
+        const fs = require('fs')
+        const file = await fs.promises.readFile('./public/address.json', 'utf8', (err: any, data: any) => {
+            if (err) return false
+            return true
+        });
+
+        const fileJson = JSON.parse(file)
+
+        const district: any[] = [];
+
+        fileJson.map((k: any) => {
+            k.sub.map((l: any) => {
+                if (city === l.name) {
+                    l.sub.map((t: any) => {
+                        district.push(t.name)
+                    })
                 }
             })
         })
 
-        res.status(200).send({ message: "Success", cities, city, id })
+        res.status(200).send({ message: "Success", district })
+    }
+    async getTown(req: Request, res: Response) {
+        const city = (req.params.city)
+        const district = (req.params.district)
+
+        const fs = require('fs')
+        const file = await fs.promises.readFile('./public/address.json', 'utf8', (err: any, data: any) => {
+            if (err) return false
+            return true
+        });
+
+        const fileJson = JSON.parse(file)
+
+        let towns: any[] = [];
+
+        fileJson.map((k: any) => {
+            k.sub.map((l: any) => {
+                if (city === l.name) {
+                    l.sub.map((t: any) => {
+                        if (district === t.name) {
+                            towns = t.sub
+                        }
+                    })
+                }
+            })
+        })
+
+        res.status(200).send({ message: "Success", district, towns, fileJson })
     }
 }

@@ -11,7 +11,8 @@ class AddressRoutes {
 
     initializeRoutes() {
         this.router.get('/cities', this.controller.getCities)
-        this.router.get('/cities/:id', this.controller.getCities)
+        this.router.get('/city/:city', this.controller.getDistrict)
+        this.router.get('/districts/:city/:district', this.controller.getTown)
     }
 }
 
