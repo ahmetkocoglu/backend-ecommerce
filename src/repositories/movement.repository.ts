@@ -3,13 +3,14 @@ import Product from "../models/product.model";
 import Users from "../models/user.model";
 
 interface IMovementRepository {
-    row(productId: number): Promise<Movement | null>;
+    row(movementId: number): Promise<Movement | null>;
     list(userId: number): Promise<Array<Movement>>;
     userOrders(userId: number): Promise<Array<Movement>>;
     usersOrders(): Promise<Array<Movement>>;
     basket(userId: number): Promise<Array<Movement>>;
     payHeaderInsert(userId: number, total: number, tax: number, discountCouponPrice: number): Promise<Number>;
     payRowUpdate(userId: number, payId: number): Promise<Number>;
+    eventUpdate(movementId: number, description: string): Promise<Number>;
     insert(
         productId: number,
         userId: number,
@@ -25,10 +26,8 @@ interface IMovementRepository {
 }
 
 class MovementRepository implements IMovementRepository {
-    async row(productId: number): Promise<Movement | null> {
-        console.log(productId);
-
-        return await Movement.findOne({ where: { productId: productId } })
+    async row(movementId: number): Promise<Movement | null> {
+        return await Movement.findOne({ where: { id: movementId } })
     }
     async list(userId: number): Promise<Array<Movement>> {
         try {
@@ -93,6 +92,17 @@ class MovementRepository implements IMovementRepository {
         return Movement.update(
             { movementId: payId, type: false, processType: 'pay' },
             { where: { userId: userId, processType: 'basket' } })
+            .then((res) => {
+                return res[0]
+            })
+            .catch((error) => {
+                return 0
+            })
+    }
+    async eventUpdate(movementId: number, description: string): Promise<number> {
+        return Movement.update(
+            { description },
+            { where: { id: movementId } })
             .then((res) => {
                 return res[0]
             })

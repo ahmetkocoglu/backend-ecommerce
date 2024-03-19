@@ -15,6 +15,7 @@ class MovementRoutes {
         this.router.get('/', this.controller.getMovements)
         this.router.get('/user-orders', this.auth.addBodyUser, this.controller.getUserOrders)
         this.router.get('/users-orders', this.auth.isAdmin, this.controller.getUsersOrders)
+        this.router.post('/order-event', this.auth.isAdmin, this.controller.setOrderEvent)
         this.router.post('/', this.controller.setMovements)
         this.router.post('/add-basket', this.auth.addBodyUser, this.controller.addBasket)
         this.router.post('/remove-basket', this.auth.addBodyUser, this.controller.removeBasket)
@@ -22,3 +23,4 @@ class MovementRoutes {
 }
 
 export default new MovementRoutes().router
+

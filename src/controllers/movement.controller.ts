@@ -60,6 +60,25 @@ export default class MovementController {
             return res.status(401).send({ message: "error" })
         }
     }
+    async setOrderEvent(req: Request, res: Response) {
+        const { movementId, event } = req.body
+
+        //return res.status(200).send({ message: row?.description + "|" + event })
+        try {
+            let row = await movementRepository.row(movementId)
+            if (!row) {
+                return res.status(401).send({ message: "no valid data found" })
+            }
+
+            row.description = row?.description + "|" + event
+
+            const update = await movementRepository.eventUpdate(movementId, row.description)
+
+            res.status(200).send({ message: "", update })
+        } catch (error) {
+            return res.status(401).send({ message: "error" })
+        }
+    }
     async setMovements(req: Request, res: Response) {
         const { productId, userId, processType, price, discountPrice, quantity, tax, total, description } = req.body
         try {
