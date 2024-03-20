@@ -7,7 +7,7 @@ import axios from "axios";
 
 export default class PaymentController {
     async pay(req: Request, res: Response) {
-        const { authUser, coupon, campaign } = req.body
+        const { authUser, coupon, campaign, address } = req.body
         const userId = authUser.userId
 
         if (!userId) return res.status(401).send({ message: "no user" })
@@ -68,7 +68,7 @@ export default class PaymentController {
                     .then(async (response: any) => {
                         if (response.data.status === true) {
                         }
-                        const payId = await movementRepository.payHeaderInsert(userId, total, totalTax, (discountCouponPrice + campaignPrice))
+                        const payId = await movementRepository.payHeaderInsert(userId, total, totalTax, (discountCouponPrice + campaignPrice), address)
 
                         await movementRepository.payRowUpdate(userId, payId)
 

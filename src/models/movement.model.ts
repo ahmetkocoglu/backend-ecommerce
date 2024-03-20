@@ -53,4 +53,7 @@ export default class Movement extends BaseModel {
 
     @Column({ type: DataType.STRING(100), field: "description"})
     description!: string
+
+    @Column({ type: DataType.STRING(250), field: "address"})
+    address!: string
 }

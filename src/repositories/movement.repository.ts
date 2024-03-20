@@ -8,7 +8,7 @@ interface IMovementRepository {
     userOrders(userId: number): Promise<Array<Movement>>;
     usersOrders(): Promise<Array<Movement>>;
     basket(userId: number): Promise<Array<Movement>>;
-    payHeaderInsert(userId: number, total: number, tax: number, discountCouponPrice: number): Promise<Number>;
+    payHeaderInsert(userId: number, total: number, tax: number, discountCouponPrice: number, address: string): Promise<Number>;
     payRowUpdate(userId: number, payId: number): Promise<Number>;
     eventUpdate(movementId: number, description: string): Promise<Number>;
     insert(
@@ -56,7 +56,7 @@ class MovementRepository implements IMovementRepository {
                 include: [{
                     model: Product,
                     attributes: ['title']
-                },{
+                }, {
                     model: Users,
                     attributes: ['name']
                 }]
@@ -78,9 +78,14 @@ class MovementRepository implements IMovementRepository {
             throw new Error("Couldn't find")
         }
     }
-    async payHeaderInsert(userId: number, total: number, tax: number, discountCouponPrice: number): Promise<number> {
+    async payHeaderInsert(userId: number, total: number, tax: number, discountCouponPrice: number, address: string): Promise<number> {
         return Movement.create({
-            userId, processType: "pay", tax, total, description: "Ödeme işlemi yapıldı" + (discountCouponPrice > 0 ? " " + discountCouponPrice + " indirim yapıldı" : "")
+            userId,
+            processType: "pay",
+            tax,
+            total,
+            description: "Ödeme işlemi yapıldı" + (discountCouponPrice > 0 ? " " + discountCouponPrice + " indirim yapıldı" : ""),
+            address
         }).then((res) => {
             return res.dataValues.id
         }).catch(() => {
