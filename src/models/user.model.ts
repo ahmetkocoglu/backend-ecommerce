@@ -4,6 +4,7 @@ import Rating from './rating.model'
 import Coupon from './coupon.model'
 import Favorite from './favorite.model'
 import { UserEnum } from '../enums/user.enum'
+import Address from './address.model'
 
 @Table({ tableName: "users" })
 export default class Users extends BaseModel {
@@ -31,5 +32,8 @@ export default class Users extends BaseModel {
     coupons: Coupon[] | undefined
 
     @HasMany(() => Favorite, 'user_id')
-    Favorites: Favorite[] | undefined
+    favorites: Favorite[] | undefined
+
+    @HasMany(() => Address, 'user_id')
+    addresses: Address[] | undefined
 }

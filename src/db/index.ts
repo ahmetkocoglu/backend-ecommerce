@@ -14,6 +14,7 @@ import Rating from "../models/rating.model";
 import Coupon from "../models/coupon.model";
 import Menu from "../models/menu.model";
 import Content from "../models/content.model";
+import Address from "../models/address.model";
 
 class Database {
   public sequelize: Sequelize | undefined;
@@ -35,7 +36,7 @@ class Database {
         acquire: config.pool.acquire,
         idle: config.pool.idle
       },
-      models: [Users, Product, Price, Variation, Category, ProductCategory, Campaign, Comment, Content, Favorite, Movement, Rating, Coupon, Menu]
+      models: [Users, Product, Price, Variation, Category, ProductCategory, Campaign, Comment, Content, Favorite, Movement, Rating, Coupon, Menu, Address]
     });
 
     await this.sequelize
