@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../common-payment-point"
+		},
+		{
+			"path": "../ecommerce-laravel"
+		},
+		{
+			"path": "../ecommerce-next"
+		},
+		{
+			"path": "../ecommerce-nuxt"
+		}
+	]
+}
