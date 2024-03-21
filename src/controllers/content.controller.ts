@@ -27,9 +27,9 @@ export default class ContentController {
         }
     }
     async setContents(req: Request, res: Response) {
-        const {productId, title, description, type} = req.body
+        const {productId, title, slug, description, type} = req.body
         try {
-            const insert = await ContentRepository.insert(productId, title, description, type)
+            const insert = await ContentRepository.insert(productId, title, slug, description, type)
 
             res.status(200).send({ message: "successful", data: insert })
         } catch (error) {

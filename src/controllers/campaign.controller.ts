@@ -33,7 +33,7 @@ export default class CampaignController {
 
             res.status(200).send({ message: "successful", data: insert })
         } catch (error) {
-            return res.status(401).send({ message: "error" })
+            return res.status(404).send({ message: "geçerli ürün yoktur", error })
         }
     }
 }

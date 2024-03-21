@@ -5,8 +5,7 @@ import userRepository from "../repositories/user.repository";
 
 export default class AuthController {
     async login(req: Request, res: Response){
-        const {email, password} = req.body
-        console.log(req.body.name);
+        const {email, password, remember} = req.body
         
         if (!email && !password){
             return res.status(400).send({message:"Email and Password can not be empty"})
@@ -21,7 +20,7 @@ export default class AuthController {
             const token = jwt.sign(
                 {id: loginUser.id, email: loginUser.email, confirm: loginUser.confirm, role: loginUser.role},
                 '123',
-                {expiresIn: '12h'}
+                {expiresIn: remember ? '3600h' : '12h'}
             );
             res.status(200).send({ message: "Login successful", user: {
                 id: loginUser.id,

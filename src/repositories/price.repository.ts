@@ -5,6 +5,7 @@ interface IPriceRepository {
     list(): Promise<Array<Price>>;
     update(
         id: number,
+        productId: number,
         price: number,
         discountPrice: number,
         discountRate: number
@@ -46,12 +47,13 @@ class PriceRepository implements IPriceRepository {
     }
     async update(
         id: number,
+        productId: number,
         price: number,
         discountPrice: number,
         discountRate: number
     ): Promise<number | null> {
         return await Price.update(
-            { price, discountPrice, discountRate },
+            { productId, price, discountPrice, discountRate },
             { where: { id } }
         )
             .then((res) => {

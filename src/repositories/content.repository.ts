@@ -7,6 +7,7 @@ interface IContentRepository {
     insert(
         productId: number,
         title: string,
+        slug: string,
         description: string,
         type: string
     ): Promise<Content | null>
@@ -32,6 +33,7 @@ class ContentRepository implements IContentRepository {
     async insert(
         productId: number,
         title: string,
+        slug: string,
         description: string,
         type: string
     ): Promise<Content | null> {
@@ -39,6 +41,7 @@ class ContentRepository implements IContentRepository {
             return await Content.create({
                 productId,
                 title,
+                slug,
                 description,
                 type
             })

@@ -16,8 +16,8 @@ export default class PriceController {
     }
     async setPrices(req: Request, res: Response) {
         const { id, productId, price, discountPrice, discountRate } = req.body
-        if (id) {
-            const update = await priceRepository.update(productId, price, discountPrice, discountRate)
+        if (id > 0) {
+            const update = await priceRepository.update(id, productId, price, discountPrice, discountRate)
 
             res.status(200).send({ message: "", data: update })
         } else {

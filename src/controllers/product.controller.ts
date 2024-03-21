@@ -32,18 +32,8 @@ export default class ProductController {
         const { authUser } = req.body
         const userId = authUser?.userId ?? 0
 
-        const url = require('url');
-        const querystring = require('querystring');
-
-        const rawUrl = req.protocol + '://' + req.get('Host') + req.url;
-        const parsedUrl = url.parse(rawUrl);
-
-        const parsedQs = querystring.parse(parsedUrl.query);
-
-        const id = parsedQs.id === "true";
-
         try {
-            if (id === true) {
+            if (isNaN(parseInt(req.params.seo)) === false) {
                 const row = await ProductRepository.productId(parseInt(req.params.seo))
                 const rowFavorite = await favoriteRepository.one(row?.id ?? 0, userId)
                 if (!row) {
